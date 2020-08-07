@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,7 @@ import com.excilys.java.CDB.model.Pagination;
 import com.excilys.java.CDB.service.ComputerService;
 import com.excilys.java.CDB.validator.ValidatorComputer;
 
+@CrossOrigin
 @RestController
 @RequestMapping("computers")
 public class ComputerRestController {
@@ -89,7 +92,7 @@ public class ComputerRestController {
 		}
 	}
 	
-	@PostMapping({ "/" })
+	@PostMapping("/")
 	public HttpStatus createComputer(@RequestBody ComputerDTO computerDTO) {
 		try {
 			ValidatorComputer.validatorName(computerDTO.getComputerName());
@@ -101,7 +104,7 @@ public class ComputerRestController {
 		return HttpStatus.CREATED;
 	}
 	
-	@PutMapping("/")
+	@PutMapping()
 	public HttpStatus updateComputer(@RequestBody ComputerDTO computerDTO) {
 		try {
 			ValidatorComputer.validatorName(computerDTO.getComputerName());

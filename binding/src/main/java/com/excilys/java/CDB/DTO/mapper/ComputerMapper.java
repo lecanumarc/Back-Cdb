@@ -28,34 +28,31 @@ public class ComputerMapper {
 	 */
 	public static Computer mapDtoToComputer(ComputerDTO computerDTO){
 		Computer computer = new Computer();
+		System.out.println("DTO---------------- : "+computerDTO);
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 		try {
-			Long id = null;
 			if(computerDTO.getComputerId()!=null) {
-				id=Long.valueOf(computerDTO.getComputerId());
+				computer.setId(Long.valueOf(computerDTO.getComputerId()));
 			}
-			String name = computerDTO.getComputerName();
-	    	LocalDate introduced = null;
+			if(computerDTO.getComputerName()!=null) {
+				computer.setName(computerDTO.getComputerName());
+			}
 	    	if (!computerDTO.getIntroduced().equals(null) && !computerDTO.getIntroduced().isEmpty()) {
-	    		introduced = LocalDate.parse(computerDTO.getIntroduced(), formatter);
+	    		computer.setIntroduced(LocalDate.parse(computerDTO.getIntroduced(), formatter));
 	    	}
-	    	LocalDate discontinued = null; 
 	    	if (!computerDTO.getDiscontinued().equals(null) && !computerDTO.getDiscontinued().isEmpty()) {
-	    		discontinued = LocalDate.parse(computerDTO.getDiscontinued(), formatter);
+	    		computer.setDiscontinued(LocalDate.parse(computerDTO.getDiscontinued(), formatter));
 	    	}
 	    	
 	    	Long company_id = Long.valueOf(computerDTO.getCompanyDTO().getCompanyId());
 	    	String company_name = computerDTO.getCompanyDTO().getCompanyName();
 	    	
-	    	computer.setId(id);
-	    	computer.setName(name);
-			computer.setIntroduced(introduced);
-			computer.setDiscontinued(discontinued);
 	    	computer.setCompany(new Company.Builder().setId(company_id).setName(company_name).build());
 	    	
 		} catch (Exception e) {
 			logger.error("Error when mapping a ComputerDTO to a Computer",e);
 		}
+		System.out.println(computer);
 		return computer;
 	}
 	

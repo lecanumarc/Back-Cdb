@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.excilys.java.CDB.DTO.RoleDTO;
 import com.excilys.java.CDB.DTO.UserDTO;
 import com.excilys.java.CDB.DTO.mapper.UserMapper;
+import com.excilys.java.CDB.model.Role;
 import com.excilys.java.CDB.model.User;
 import com.excilys.java.CDB.service.UserService;
 
@@ -37,7 +39,9 @@ private static Logger logger = LoggerFactory.getLogger(RegisterUserController.cl
 		
 		if (!userDTO.getUsername().isEmpty() && !userDTO.getPassword().isEmpty() && userDTO.getPassword().equals(passwordConfirm)) {
             userDTO.setPassword(passwordEncoder.encode(passwordConfirm));
-			userDTO.setRole("USER");
+            RoleDTO roleDTO = new RoleDTO();
+            roleDTO.setName("USER");
+			userDTO.setRole(roleDTO);
 			User user = UserMapper.mapDtoToUser(userDTO);
 			userService.createUser(user);
 		}
