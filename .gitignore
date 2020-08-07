@@ -1,0 +1,10 @@
+/persistence/src/main/resources/db.properties
+/persistence/src/main/resources/datasource.properties
+/persistence/src/test/resources/db.properties
+.project
+.settings
+/*/.settings
+/*/.classpath
+/*/.project
+/*/target/
+/webapp/.tern-project

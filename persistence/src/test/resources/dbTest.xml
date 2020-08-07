@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <company id='1' name='Apple Inc.' />
+    <company id='2' name='Thinking Machines' />
+    <company id='3' name='Test' />
+    
+    <computer id='6' name='MacBook Pro' introduced='2006-01-10' discontinued='2010-05-23' company_id='1'/>
+    <computer id='8' name='Apple IIc'/>
+    <computer id='10' name='Youhou' company_id='3'/>
+    
+</dataset>
