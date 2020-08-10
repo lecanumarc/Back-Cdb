@@ -86,7 +86,8 @@ public class UserInterface {
 							System.out.println(computerIdUpdate);
 							System.out.println("Complete the new informations : ");
 							Computer computerUpdate = infoComputer();
-							computerUpdate.setId(idComputer);
+							//TO DO : use builder
+							//computerUpdate.setId(idComputer);
 							computerService.updateComputer(computerUpdate);
 							System.out.println("Computer updated with success");
 						}else {
@@ -166,8 +167,8 @@ public class UserInterface {
 		LocalDate discontinued = null;
 		String id="";
 		Long idCompany= null;
-		Company company = new Company();
-		Computer computer = new Computer();
+		Company company = null;
+		Computer computer = null;
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 		
 		while(!conditionsOK) {

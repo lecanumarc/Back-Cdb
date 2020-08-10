@@ -8,44 +8,26 @@ public class ComputerDTO {
 	private String discontinued;
 	private CompanyDTO companyDTO;
 
+	private ComputerDTO(){}
+	
 	public String getComputerId() {
 		return computerId;
-	}
-
-	public void setComputerId(String id) {
-		this.computerId = id;
 	}
 
 	public String getComputerName() {
 		return computerName;
 	}
 
-	public void setComputerName(String name) {
-		this.computerName = name;
-	}
-
 	public String getIntroduced() {
 		return introduced;
-	}
-
-	public void setIntroduced(String introduced) {
-		this.introduced = introduced;
 	}
 
 	public String getDiscontinued() {
 		return discontinued;
 	}
 
-	public void setDiscontinued(String discontinued) {
-		this.discontinued = discontinued;
-	}
-
 	public CompanyDTO getCompanyDTO() {
 		return companyDTO;
-	}
-
-	public void setCompanyDTO(CompanyDTO companyDTO) {
-		this.companyDTO = companyDTO;
 	}
 
 	@Override

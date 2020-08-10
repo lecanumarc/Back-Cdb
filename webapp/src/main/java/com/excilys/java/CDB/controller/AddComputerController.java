@@ -65,7 +65,8 @@ public class AddComputerController {
         }
 		
 		if (errors.isEmpty()) {
-			computerDTO.setCompanyDTO(companyDTO);
+			// TO DO : refacto
+			//computerDTO.setCompanyDTO(companyDTO);
 			Computer computer = ComputerMapper.mapDtoToComputer(computerDTO);
 			computerService.createComputer(computer);
 			resultCreation = "Computer added with success.";

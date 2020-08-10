@@ -61,7 +61,7 @@ public class CompanyRestController {
 	
 	@GetMapping("/{id}")
 	public CompanyDTO findById(@PathVariable Long id) {
-		CompanyDTO companyDTO = new CompanyDTO();
+		CompanyDTO companyDTO = null;
 		if (companyService.existCompany(id)) {
 			companyDTO = CompanyMapper.mapCompanyToDTO(companyService.findbyID(id));
 		}

@@ -5,20 +5,14 @@ public class CompanyDTO {
 	private String companyId; 
 	private String companyName;
 
+	private CompanyDTO() {}
+	
 	public String getCompanyId() {
 		return companyId;
 	}
-
-	public void setCompanyId(String id) {
-		this.companyId = id;
-	}
-
+	
 	public String getCompanyName() {
 		return companyName;
-	}
-
-	public void setCompanyName(String name) {
-		this.companyName = name;
 	}
 
 	@Override

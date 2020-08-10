@@ -36,7 +36,6 @@ public class ComputerService {
 	}
 	
 	public void createComputer(Computer computer) {
-		computer.setCompany(computer.getCompany().getId()==0 ? null : computer.getCompany());
 		computerDAO.save(computer);
 	}
 	
@@ -51,7 +50,6 @@ public class ComputerService {
 	public boolean existComputer(Long id) {
 		return computerDAO.existsById(id);
 	}
-	
 	
 	public int countComputer(String search) {
 		if(search==null) {

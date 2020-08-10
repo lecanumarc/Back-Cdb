@@ -41,7 +41,7 @@ public class EditComputerController {
 	@GetMapping
 	public ModelAndView computerInfo(ComputerDTO computerDTO) {
 		ModelAndView modelView = new ModelAndView("editComputer");
-		Computer computer = new Computer();
+		Computer computer = null;
 
 		if (computerDTO.getComputerId() != null) {
 			computer = computerService.findbyID(Long.parseLong(computerDTO.getComputerId()));
@@ -77,7 +77,8 @@ public class EditComputerController {
         }
 		
 		if (errors.isEmpty()) {
-			computerDTO.setCompanyDTO(companyDTO);
+			//TO DO : refacto
+			//computerDTO.setCompanyDTO(companyDTO);
 			Computer computer = ComputerMapper.mapDtoToComputer(computerDTO);
 			computerService.updateComputer(computer);
 			logger.info("Computer updated with success.");

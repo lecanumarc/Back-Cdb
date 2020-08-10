@@ -10,7 +10,7 @@ import com.excilys.java.CDB.exception.ComputerDateException;
 import com.excilys.java.CDB.exception.ComputerNameException;
 
 public class ValidatorComputer {
-	
+	//TO DO: refacto
 	private static Logger logger = LoggerFactory.getLogger(ValidatorComputer.class);
 
 	public static void validatorName(String name) throws ComputerNameException {

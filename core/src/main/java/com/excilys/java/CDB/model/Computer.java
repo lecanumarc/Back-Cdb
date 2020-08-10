@@ -30,50 +30,26 @@ public class Computer {
 	@JoinColumn(name = "company_id")
 	private Company company;
 
+	private Computer() {}
+	
 	public Long getId() {
 		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public LocalDate getIntroduced() {
 		return introduced;
-	}
-
-	public void setIntroduced(LocalDate introduced) throws Exception {
-		if (introduced != null && this.discontinued != null && introduced.isAfter(this.discontinued)) {
-			throw new Exception("Introduced date is after discontinued date");
-		}
-		this.introduced = introduced;
 	}
 
 	public LocalDate getDiscontinued() {
 		return discontinued;
 	}
 
-	public void setDiscontinued(LocalDate discontinued) throws Exception {
-		if (discontinued != null && this.introduced != null && discontinued.isBefore(this.introduced)) {
-			throw new Exception("Discontinued date is before introduced date");
-		}
-		this.discontinued = discontinued;
-	}
-
 	public Company getCompany() {
 		return company;
-	}
-
-	public void setCompany(Company company) {
-		this.company = company;
 	}
 
 	@Override

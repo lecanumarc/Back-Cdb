@@ -74,7 +74,7 @@ public class ComputerRestController {
 
 	@GetMapping("/{id}")
 	public ComputerDTO findById(@PathVariable Long id) {
-		ComputerDTO computerDTO = new ComputerDTO();
+		ComputerDTO computerDTO = null;
 		if (computerService.existComputer(id)) {
 			computerDTO = ComputerMapper.mapComputerToDTO(computerService.findbyID(id));
 		}
