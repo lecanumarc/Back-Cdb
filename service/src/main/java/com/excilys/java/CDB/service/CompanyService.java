@@ -1,15 +1,15 @@
 package com.excilys.java.CDB.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.excilys.java.CDB.model.Company;
-import com.excilys.java.CDB.model.Pagination;
 import com.excilys.java.CDB.persistence.DAO.CompanyDAO;
 
 @Service
@@ -20,33 +20,53 @@ public class CompanyService {
 	 *  @author ninonV
 	 *  **/
 	
+	private CompanyDAO companyDao;
+	
 	@Autowired
-	private CompanyDAO companyDAO;
-	
-	public List<Company> listCompanies(){
-		return companyDAO.findAll();
-	}
-	
-	public Company findbyID(Long id) {
-		return companyDAO.findById(id).get();
-	}
-	
-	public void deleteCompany(Long id) {
-		companyDAO.deleteById(id);
+	public CompanyService(CompanyDAO companyDao) {
+		this.companyDao = companyDao;
 	}
 
-	public boolean existCompany(Long id) {
-		return companyDAO.existsById(id);
+	public void add(Company obj) {
+		companyDao.save(obj);
+	}
+
+	public void edit(Company obj) {
+		companyDao.save(obj);
+	}
+
+	public void delete(long id) {
+		companyDao.deleteById(id);
+	}
+
+	public Optional<Company> findById(Long id) {
+		return companyDao.findById(id);
+	}
+
+	public Page<Company> listByPage(int index, int rows) {
+		return companyDao.findAll(PageRequest.of(index, rows));
 	}
 	
-	public int countCompany() {
-		return (int) companyDAO.count();
+	public Page<Company> listByPage(String filter, PageRequest pageReq) {
+		//PageRequest.of(index, rows , sortBy(column, ascOrder))
+		return companyDao.findByNameContaining(filter, pageReq);
+	}
+
+	public Sort sortBy(String column, boolean ascOrder) {
+		if(ascOrder) {
+			return Sort.by(column).ascending();
+		}
+		return Sort.by(column).descending();
 	}
 	
-	public List<Company> getListPage(Pagination page){
-		Pageable pageRequest = PageRequest.of(page.getCurrentPage()-1, page.getLinesPage());
-		Page<Company> companiesPage = companyDAO.findAll(pageRequest);
-		return companiesPage.getContent();
+	public List<Company> listCompanies() {
+		return companyDao.findAll();
 	}
+
+//	public List<Company> getListPage(Pagination page){
+//		Pageable pageRequest = PageRequest.of(page.getCurrentPage()-1, page.getLinesPage());
+//		Page<Company> companiesPage = companyDAO.findAll(pageRequest);
+//		return companiesPage.getContent();
+//	}
 	
 }

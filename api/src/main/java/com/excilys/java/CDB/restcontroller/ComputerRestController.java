@@ -1,10 +1,14 @@
 package com.excilys.java.CDB.restcontroller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,106 +22,87 @@ import org.springframework.web.bind.annotation.RestController;
 import com.excilys.java.CDB.DTO.ComputerDTO;
 import com.excilys.java.CDB.DTO.DashboardDTO;
 import com.excilys.java.CDB.DTO.mapper.ComputerMapper;
-import com.excilys.java.CDB.exception.ComputerDateException;
-import com.excilys.java.CDB.exception.ComputerNameException;
+import com.excilys.java.CDB.exception.ComputerException;
 import com.excilys.java.CDB.model.Computer;
-import com.excilys.java.CDB.model.Pagination;
 import com.excilys.java.CDB.service.ComputerService;
 import com.excilys.java.CDB.validator.ValidatorComputer;
+import com.excilys.java.CDB.validator.ValidatorComputerDTO;
 
 @CrossOrigin(origins="*")
 @RestController
 @RequestMapping("computers")
 public class ComputerRestController {
-
-	@Autowired
+	
+	private DashboardDTO page = new DashboardDTO();
 	private ComputerService computerService;
 
+	@Autowired
+	public ComputerRestController(ComputerService computerService) {
+		this.computerService = computerService;
+	}
+	
 	@GetMapping({"", "/"})
-	public List<ComputerDTO> allComputers() {
+	public ResponseEntity<List<ComputerDTO>> allComputers() {
 		List<Computer> computers = computerService.listComputers();
-		return computers.stream().map(computer -> ComputerMapper.mapComputerToDTO(computer)).collect(Collectors.toList());
+		
+		List<ComputerDTO> computersDto = computers.stream().map(computer -> ComputerMapper.mapComputerToDTO(computer)).collect(Collectors.toList());
+		
+		return new ResponseEntity<List<ComputerDTO>>(computersDto, HttpStatus.OK);
 	}
 	
 	@GetMapping("/page")
-	public List<ComputerDTO> listComputers(@RequestBody DashboardDTO dashboardDTO) {
-		Pagination page = new Pagination();
-        
-        if(dashboardDTO.getLinesNb()!=null) {
-			int linesNb= Integer.parseInt(dashboardDTO.getLinesNb());
-			page.setLinesPage(linesNb);
-		}
-        
-		int total = computerService.countComputer(dashboardDTO.getSearch());
-		int nbPages = page.getTotalPages(total);
-		
-		if(dashboardDTO.getPageNb()!=null) {
-			int pageAsked = Integer.parseInt(dashboardDTO.getPageNb());
-			if (pageAsked>0 & pageAsked <= nbPages) {
-				page.setCurrentPage(pageAsked);
-			}
-		}
-		
-		page.setFirstLine(page.calculFirstLine());
+	public ResponseEntity<List<ComputerDTO>> listComputers(@RequestBody DashboardDTO dashboardDTO) {
+		page.setPage(dashboardDTO);
+		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()),
+				Integer.parseInt(page.getLinesNb()),
+				computerService.sortBy(page.getColumn(), Boolean.valueOf(page.getAscOrder())));
 
-		List<Computer> computers = computerService.getListPage(page,dashboardDTO.getSearch(),dashboardDTO.getOrder());
-		return computers.stream().map(computer->ComputerMapper.mapComputerToDTO(computer)).collect(Collectors.toList());
+		Page<Computer> computers = computerService.listByPage(page.getSearch(), pageReq);
+		List<ComputerDTO> computersDto = computers.stream().map(computer -> ComputerMapper.mapComputerToDTO(computer)).collect(Collectors.toList());
 		
-	}
-	
-	@GetMapping("/number")
-	public int numberComputers(@RequestBody DashboardDTO dashboardDTO) {
-		return computerService.countComputer(dashboardDTO.getSearch());
+		return new ResponseEntity<List<ComputerDTO>>(computersDto, HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
-	public ComputerDTO findById(@PathVariable Long id) {
+	public ResponseEntity<ComputerDTO> findById(@PathVariable Long id) {
 		ComputerDTO computerDTO = null;
-		if (computerService.existComputer(id)) {
-			computerDTO = ComputerMapper.mapComputerToDTO(computerService.findbyID(id));
+		Optional<Computer> computer = computerService.findById(id);
+		if (computer.isPresent()) {
+			computerDTO = ComputerMapper.mapComputerToDTO(computer.get());
 		}
-		return computerDTO; 
+		return new ResponseEntity<ComputerDTO>(computerDTO, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
-	public HttpStatus deleteById(@PathVariable Long id) {
-		if (computerService.existComputer(id)) {
-			computerService.deleteComputer(id);
-            return HttpStatus.OK;
-		}
-		else {
-			return HttpStatus.NOT_FOUND;
-		}
+	public ResponseEntity<ComputerDTO> deleteById(@PathVariable Long id) {
+		computerService.delete(id);
+		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
 	}
 	
-	@PostMapping()
-	public HttpStatus createComputer(@RequestBody ComputerDTO computerDTO) {
+	@PostMapping(consumes = "application/json")
+	public ResponseEntity<ComputerDTO>  createComputer(@RequestBody ComputerDTO computerDTO) {
 		try {
-			ValidatorComputer.validatorName(computerDTO.getComputerName());
-			ValidatorComputer.validatorDate(computerDTO.getIntroduced(), computerDTO.getDiscontinued());
-			computerService.createComputer(ComputerMapper.mapDtoToComputer(computerDTO));
-		}catch ( ComputerNameException | ComputerDateException  e ) {
-			return HttpStatus.BAD_REQUEST;
+			ValidatorComputerDTO.validate(computerDTO);
+			Computer computer = ComputerMapper.mapDtoToComputer(computerDTO);
+			ValidatorComputer.validate(computer);
+			computerService.add(computer);
+		} catch (ComputerException e) {
+			e.printStackTrace();
 		}
-		return HttpStatus.CREATED;
+		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
 	}
 	
-	@PutMapping()
-	public HttpStatus updateComputer(@RequestBody ComputerDTO computerDTO) {
+	@PutMapping(consumes = "application/json")
+	public ResponseEntity<ComputerDTO>  updateComputer(@RequestBody ComputerDTO computerDTO) {
 		try {
-			ValidatorComputer.validatorName(computerDTO.getComputerName());
-			ValidatorComputer.validatorDate(computerDTO.getIntroduced(), computerDTO.getDiscontinued());
-		}catch ( ComputerNameException | ComputerDateException  e ) {
-			return HttpStatus.BAD_REQUEST;
+			ValidatorComputerDTO.validate(computerDTO);
+			Computer computer = ComputerMapper.mapDtoToComputer(computerDTO);
+			ValidatorComputer.validate(computer);
+			computerService.edit(computer);
+		} catch (ComputerException e) {
+			e.printStackTrace();
 		}
-		
-		Computer computer = ComputerMapper.mapDtoToComputer(computerDTO);
-		if(computerService.existComputer(computer.getId())) {
-			computerService.updateComputer(computer);
-			return HttpStatus.ACCEPTED;
-		}else {
-			return HttpStatus.NOT_FOUND;
-		}
+		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
 		
 	}
 

@@ -22,7 +22,7 @@ import com.excilys.java.CDB.service.ComputerService;
 
 @Component 
 public class UserInterface {
-	
+	//TO DO: refacto
 	@Autowired
 	private ComputerService computerService;  
 	@Autowired
@@ -52,81 +52,81 @@ public class UserInterface {
 				String choice = sc.nextLine();
 				int choiceInt = Integer.parseInt(choice);
 				
-				switch(choiceInt) {
-					case 1:
-						pagesComputers();
-						break;
-						
-					case 2: 
-						pagesCompanies();
-						break; 
-						
-					case 3: 
-						Long idC = getID();
-						if (computerService.existComputer(idC)) {
-							Computer computerID = computerService.findbyID(idC);
-							System.out.println(computerID);
-						}else {
-							System.out.println("This computer does not exist");
-						}
-						break; 
-						
-					case 4:
-						System.out.println("What is the computer that you want to create : ");
-						Computer computerCreate = infoComputer(); 
-						computerService.createComputer(computerCreate);
-						System.out.println("Computer created with success");
-						break; 
-						
-					case 5:
-						System.out.println("Which computer do you want to update: ");
-						Long idComputer = getID();
-						if (computerService.existComputer(idComputer)) {
-							Computer computerIdUpdate = computerService.findbyID(idComputer);
-							System.out.println(computerIdUpdate);
-							System.out.println("Complete the new informations : ");
-							Computer computerUpdate = infoComputer();
-							//TO DO : use builder
-							//computerUpdate.setId(idComputer);
-							computerService.updateComputer(computerUpdate);
-							System.out.println("Computer updated with success");
-						}else {
-							System.out.println("This computer does not exist");
-						}
-						break;
-						
-					case 6: 
-						System.out.println("Which computer do you want to delete: ");
-						Long idComputerDelete = getID();
-						if (computerService.existComputer(idComputerDelete)) {
-							Computer computerIdDelete = computerService.findbyID(idComputerDelete);
-							System.out.println(computerIdDelete);
-							computerService.deleteComputer(idComputerDelete);
-							System.out.println("Computer deleted with success");
-						}else {
-							System.out.println("This computer does not exist");
-						}
-						break;
-					case 7: 
-						System.out.println("Which company do you want to delete: ");
-						Long idCompanyDelete = getID();
-						if (companyService.existCompany(idCompanyDelete)){
-							Company companyIdDelete = companyService.findbyID(idCompanyDelete);
-							System.out.println(companyIdDelete);
-							companyService.deleteCompany(idCompanyDelete);
-							System.out.println("Company ans computers of the company deleted with success");
-							
-							
-						}else {
-							System.out.println("This company does not exist");
-						}
-						break;
-					case 8: 
-						quit = true; 
-						break;
-					default: 
-						System.out.println("Select a choice between 1 and 7");
-				}
+//				switch(choiceInt) {
+//					case 1:
+//						pagesComputers();
+//						break;
+//						
+//					case 2: 
+//						pagesCompanies();
+//						break; 
+//						
+//					case 3: 
+//						Long idC = getID();
+//						if (computerService.existComputer(idC)) {
+//							Computer computerID = computerService.findbyID(idC);
+//							System.out.println(computerID);
+//						}else {
+//							System.out.println("This computer does not exist");
+//						}
+//						break; 
+//						
+//					case 4:
+//						System.out.println("What is the computer that you want to create : ");
+//						Computer computerCreate = infoComputer(); 
+//						computerService.createComputer(computerCreate);
+//						System.out.println("Computer created with success");
+//						break; 
+//						
+//					case 5:
+//						System.out.println("Which computer do you want to update: ");
+//						Long idComputer = getID();
+//						if (computerService.existComputer(idComputer)) {
+//							Computer computerIdUpdate = computerService.findbyID(idComputer);
+//							System.out.println(computerIdUpdate);
+//							System.out.println("Complete the new informations : ");
+//							Computer computerUpdate = infoComputer();
+//							//TO DO : use builder
+//							//computerUpdate.setId(idComputer);
+//							computerService.updateComputer(computerUpdate);
+//							System.out.println("Computer updated with success");
+//						}else {
+//							System.out.println("This computer does not exist");
+//						}
+//						break;
+//						
+//					case 6: 
+//						System.out.println("Which computer do you want to delete: ");
+//						Long idComputerDelete = getID();
+//						if (computerService.existComputer(idComputerDelete)) {
+//							Computer computerIdDelete = computerService.findbyID(idComputerDelete);
+//							System.out.println(computerIdDelete);
+//							computerService.deleteComputer(idComputerDelete);
+//							System.out.println("Computer deleted with success");
+//						}else {
+//							System.out.println("This computer does not exist");
+//						}
+//						break;
+//					case 7: 
+//						System.out.println("Which company do you want to delete: ");
+//						Long idCompanyDelete = getID();
+//						if (companyService.existCompany(idCompanyDelete)){
+//							Company companyIdDelete = companyService.findbyID(idCompanyDelete);
+//							System.out.println(companyIdDelete);
+//							companyService.deleteCompany(idCompanyDelete);
+//							System.out.println("Company ans computers of the company deleted with success");
+//							
+//							
+//						}else {
+//							System.out.println("This company does not exist");
+//						}
+//						break;
+//					case 8: 
+//						quit = true; 
+//						break;
+//					default: 
+//						System.out.println("Select a choice between 1 and 7");
+//				}
 			}catch (java.lang.NumberFormatException e) {
 				System.err.println("Enter a number between 1 and 7");
 			}
@@ -200,7 +200,7 @@ public class UserInterface {
 				id = sc.nextLine();
 				if (id.length()>0) {
 					idCompany = Long.valueOf(id);
-					company = companyService.findbyID(idCompany);
+//					company = companyService.findbyID(idCompany);
 				}
 			}catch (java.lang.NumberFormatException e) {
 				System.err.println("Enter a number");
@@ -214,7 +214,7 @@ public class UserInterface {
 									.setCompany(company)
 									.build();
 			System.out.println(computer.getCompany());
-			conditionsOK=computerService.allowCreation(computer);
+//			conditionsOK=computerService.allowCreation(computer);
 		}	
 		return computer;
 	}
@@ -224,16 +224,16 @@ public class UserInterface {
 	 */
 	
 	public void pagesComputers(){
-		Pagination page = new Pagination();
-		int total = computerService.countComputer(null);
-		int nbPages = page.getTotalPages(total);
-		boolean quitPage = false; 
-		
-		while (!quitPage) {
-			List<Computer> computers = computerService.getListPage(page,null,null);
-			System.out.println(computers);
-			quitPage = menuPage(page, nbPages);
-		}
+//		Pagination page = new Pagination();
+////		int total = computerService.countComputer(null);
+//		int nbPages = page.getTotalPages(total);
+//		boolean quitPage = false; 
+//		
+//		while (!quitPage) {
+//			List<Computer> computers = computerService.getListPage(page,null,null);
+//			System.out.println(computers);
+//			quitPage = menuPage(page, nbPages);
+//		}
 	}
 	
 	/**
@@ -242,17 +242,17 @@ public class UserInterface {
 	
 	
 	public void pagesCompanies() {
-		Pagination page = new Pagination();
-		
-		int total = companyService.countCompany();
-		int nbPages = page.getTotalPages(total);
-		boolean quitPage = false; 
-		
-		while (!quitPage) {
-			List<Company> companies = companyService.getListPage(page);
-			System.out.println(companies);
-			quitPage = menuPage(page, nbPages);
-		}
+//		Pagination page = new Pagination();
+//		
+//		int total = companyService.countCompany();
+//		int nbPages = page.getTotalPages(total);
+//		boolean quitPage = false; 
+//		
+//		while (!quitPage) {
+//			List<Company> companies = companyService.getListPage(page);
+//			System.out.println(companies);
+//			quitPage = menuPage(page, nbPages);
+//		}
 	}
 
 	/**

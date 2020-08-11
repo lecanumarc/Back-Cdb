@@ -25,12 +25,12 @@ import com.excilys.java.CDB.model.Company;
 import com.excilys.java.CDB.model.Computer;
 import com.excilys.java.CDB.service.CompanyService;
 import com.excilys.java.CDB.service.ComputerService;
-import com.excilys.java.CDB.validator.ValidatorComputer;
+import com.excilys.java.CDB.validator.ValidatorComputerDTO;
 
 @Controller
 @RequestMapping("/EditComputer")
 public class EditComputerController {
-
+//TO DO : refacto
 	private static Logger logger = LoggerFactory.getLogger(EditComputerController.class);
 
 	@Autowired
@@ -42,10 +42,10 @@ public class EditComputerController {
 	public ModelAndView computerInfo(ComputerDTO computerDTO) {
 		ModelAndView modelView = new ModelAndView("editComputer");
 		Computer computer = null;
-
-		if (computerDTO.getComputerId() != null) {
-			computer = computerService.findbyID(Long.parseLong(computerDTO.getComputerId()));
-		}
+//
+//		if (computerDTO.getComputerId() != null) {
+//			computer = computerService.findById(Long.parseLong(computerDTO.getComputerId()));
+//		}
 
 		if (computer != null) {
 			computerDTO = ComputerMapper.mapComputerToDTO(computer);
@@ -68,8 +68,8 @@ public class EditComputerController {
 		Map<String, String> errors = new HashMap<String, String>();
 	
 		try {
-			ValidatorComputer.validatorName(computerDTO.getComputerName());
-			ValidatorComputer.validatorDate(computerDTO.getIntroduced(), computerDTO.getDiscontinued());
+			ValidatorComputerDTO.validatorName(computerDTO.getComputerName());
+			ValidatorComputerDTO.validatorDate(computerDTO.getIntroduced(), computerDTO.getDiscontinued());
 		}catch ( ComputerNameException e ) {
             errors.put( "computerName", e.getMessage() );
         }catch ( ComputerDateException e ) {
@@ -80,7 +80,7 @@ public class EditComputerController {
 			//TO DO : refacto
 			//computerDTO.setCompanyDTO(companyDTO);
 			Computer computer = ComputerMapper.mapDtoToComputer(computerDTO);
-			computerService.updateComputer(computer);
+			computerService.edit(computer);
 			logger.info("Computer updated with success.");
 			return new RedirectView("/webapp/");
 		}else {

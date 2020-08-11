@@ -24,7 +24,7 @@ import com.excilys.java.CDB.model.Company;
 import com.excilys.java.CDB.model.Computer;
 import com.excilys.java.CDB.service.CompanyService;
 import com.excilys.java.CDB.service.ComputerService;
-import com.excilys.java.CDB.validator.ValidatorComputer;
+import com.excilys.java.CDB.validator.ValidatorComputerDTO;
 
 @Controller
 @RequestMapping("/AddComputer")
@@ -56,8 +56,8 @@ public class AddComputerController {
 		String resultCreation;
 	
 		try {
-			ValidatorComputer.validatorName(computerDTO.getComputerName());
-			ValidatorComputer.validatorDate(computerDTO.getIntroduced(), computerDTO.getDiscontinued());
+			ValidatorComputerDTO.validatorName(computerDTO.getComputerName());
+			ValidatorComputerDTO.validatorDate(computerDTO.getIntroduced(), computerDTO.getDiscontinued());
 		}catch ( ComputerNameException e ) {
             errors.put( "name", e.getMessage() );
         }catch ( ComputerDateException e ) {
@@ -68,7 +68,7 @@ public class AddComputerController {
 			// TO DO : refacto
 			//computerDTO.setCompanyDTO(companyDTO);
 			Computer computer = ComputerMapper.mapDtoToComputer(computerDTO);
-			computerService.createComputer(computer);
+			computerService.add(computer);
 			resultCreation = "Computer added with success.";
 			logger.info("Computer added with success.");
 		}else {

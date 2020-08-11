@@ -30,43 +30,43 @@ public class ListComputerController {
 	@Autowired
 	private ComputerService computerService; 
 	
-	@GetMapping
-	public ModelAndView listComputers(DashboardDTO dashboardDTO) { 
-        ModelAndView modelView = new ModelAndView("dashboard"); 
+//	@GetMapping
+//	public ModelAndView listComputers(DashboardDTO dashboardDTO) { 
+//        ModelAndView modelView = new ModelAndView("dashboard"); 
+//        
+//        Pagination page = new Pagination();
+//        
+//        if(dashboardDTO.getLinesNb()!=null) {
+//			int linesNb= Integer.parseInt(dashboardDTO.getLinesNb());
+//			page.setLinesPage(linesNb);
+//		}
+//        
+//
+//		int total = computerService.countComputer(dashboardDTO.getSearch());
+//		int nbPages = page.getTotalPages(total);
+//		
+//		if(dashboardDTO.getPageNb()!=null) {
+//			int pageAsked = Integer.parseInt(dashboardDTO.getPageNb());
+//			if (pageAsked>0 & pageAsked <= nbPages) {
+//				page.setCurrentPage(pageAsked);
+//			}
+//		}
+//		
+//		page.setFirstLine(page.calculFirstLine());
+//
+//		List<Computer> computers = computerService.getListPage(page,dashboardDTO.getSearch(),dashboardDTO.getOrder());
+//		List<ComputerDTO> computersDTO = computers.stream().map(computer->ComputerMapper.mapComputerToDTO(computer)).collect(Collectors.toList());
+//        
+//        modelView.addObject("totalComputers", total); 
+//        modelView.addObject("currentPage", page.getCurrentPage());
+//        modelView.addObject("totalPages", nbPages);
+//        modelView.addObject("linesNb", page.getLinesPage());
+//        modelView.addObject("search", dashboardDTO.getSearch());
+//        modelView.addObject("order", dashboardDTO.getOrder());
+//        modelView.addObject("listComputers", computersDTO);
         
-        Pagination page = new Pagination();
-        
-        if(dashboardDTO.getLinesNb()!=null) {
-			int linesNb= Integer.parseInt(dashboardDTO.getLinesNb());
-			page.setLinesPage(linesNb);
-		}
-        
-
-		int total = computerService.countComputer(dashboardDTO.getSearch());
-		int nbPages = page.getTotalPages(total);
-		
-		if(dashboardDTO.getPageNb()!=null) {
-			int pageAsked = Integer.parseInt(dashboardDTO.getPageNb());
-			if (pageAsked>0 & pageAsked <= nbPages) {
-				page.setCurrentPage(pageAsked);
-			}
-		}
-		
-		page.setFirstLine(page.calculFirstLine());
-
-		List<Computer> computers = computerService.getListPage(page,dashboardDTO.getSearch(),dashboardDTO.getOrder());
-		List<ComputerDTO> computersDTO = computers.stream().map(computer->ComputerMapper.mapComputerToDTO(computer)).collect(Collectors.toList());
-        
-        modelView.addObject("totalComputers", total); 
-        modelView.addObject("currentPage", page.getCurrentPage());
-        modelView.addObject("totalPages", nbPages);
-        modelView.addObject("linesNb", page.getLinesPage());
-        modelView.addObject("search", dashboardDTO.getSearch());
-        modelView.addObject("order", dashboardDTO.getOrder());
-        modelView.addObject("listComputers", computersDTO);
-        
-        return modelView; 
-    } 
+       // return modelView; 
+//    } 
 	
 	@PostMapping
 	 public ModelAndView deleteComputer(@RequestParam String selection){
@@ -76,7 +76,7 @@ public class ListComputerController {
 			 String[] idToDelete = selection.split(",");
 			 for(int i=0;i<idToDelete.length;i++) {
 				   Long id = Long.valueOf(idToDelete[i]);
-				   computerService.deleteComputer(id);
+				  // computerService.deleteComputer(id);
 				   logger.info("Computers deleted");	
 			 }
 		   }
