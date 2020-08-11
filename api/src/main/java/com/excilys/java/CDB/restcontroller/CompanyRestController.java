@@ -20,8 +20,9 @@ import com.excilys.java.CDB.model.Company;
 import com.excilys.java.CDB.model.Pagination;
 import com.excilys.java.CDB.service.CompanyService;
 
-@CrossOrigin
+
 @RestController
+@CrossOrigin(origins="*")
 @RequestMapping("companies")
 public class CompanyRestController {
 

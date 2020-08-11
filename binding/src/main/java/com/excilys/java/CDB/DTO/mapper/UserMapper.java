@@ -3,9 +3,7 @@ package com.excilys.java.CDB.DTO.mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.java.CDB.DTO.RoleDTO;
 import com.excilys.java.CDB.DTO.UserDTO;
-import com.excilys.java.CDB.model.Role;
 import com.excilys.java.CDB.model.User;
 
 public class UserMapper {

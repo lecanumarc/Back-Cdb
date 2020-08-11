@@ -39,10 +39,10 @@ public class ComputerMapper {
 				if(computerDTO.getComputerName()!=null) {
 					builder.setName(computerDTO.getComputerName());
 				}
-				if (!computerDTO.getIntroduced().equals(null) && !computerDTO.getIntroduced().isEmpty()) {
+				if (computerDTO.getIntroduced() !=null && !computerDTO.getIntroduced().isEmpty()) {
 					builder.setIntroduced(LocalDate.parse(computerDTO.getIntroduced(), formatter));
 				}
-				if (!computerDTO.getDiscontinued().equals(null) && !computerDTO.getDiscontinued().isEmpty()) {
+				if (computerDTO.getDiscontinued() !=null && !computerDTO.getDiscontinued().isEmpty()) {
 					builder.setDiscontinued(LocalDate.parse(computerDTO.getDiscontinued(), formatter));
 				}
 				if(computerDTO.getCompanyDTO() != null) {
