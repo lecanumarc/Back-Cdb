@@ -70,4 +70,12 @@ public class ComputerService {
 	public List<Computer> listComputers() {
 		return computerDao.findAll();
 	}
+	
+	public int countComputer(String search) {
+		if(search==null) {
+			return (int) computerDao.count();
+		}else {
+			return computerDao.countByNameContaining(search);
+		}
+	}
 }
