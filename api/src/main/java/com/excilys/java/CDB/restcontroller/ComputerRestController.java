@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,7 +28,7 @@ import com.excilys.java.CDB.service.ComputerService;
 import com.excilys.java.CDB.validator.ValidatorComputer;
 import com.excilys.java.CDB.validator.ValidatorComputerDTO;
 
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("computers")
 public class ComputerRestController {
@@ -40,26 +39,27 @@ public class ComputerRestController {
 	public ComputerRestController(ComputerService computerService) {
 		this.computerService = computerService;
 	}
-	
-	@GetMapping({"", "/"})
+
+	@GetMapping({ "", "/" })
 	public ResponseEntity<List<ComputerDTO>> allComputers() {
 		List<Computer> computers = computerService.listComputers();
-		
-		List<ComputerDTO> computersDto = computers.stream().map(computer -> ComputerMapper.mapComputerToDTO(computer)).collect(Collectors.toList());
-		
+
+		List<ComputerDTO> computersDto = computers.stream().map(computer -> ComputerMapper.mapComputerToDTO(computer))
+				.collect(Collectors.toList());
+
 		return new ResponseEntity<List<ComputerDTO>>(computersDto, HttpStatus.OK);
 	}
-	
-	@GetMapping("/page")
+
+	@PostMapping("/page")
 	public ResponseEntity<List<ComputerDTO>> listComputers(@RequestBody DashboardDTO dashboardDTO) {
 		page.setPage(dashboardDTO);
-		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()),
-				Integer.parseInt(page.getLinesNb()),
+		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()), Integer.parseInt(page.getLinesNb()),
 				computerService.sortBy(page.getColumn(), Boolean.valueOf(page.getAscOrder())));
 
 		Page<Computer> computers = computerService.listByPage(page.getSearch(), pageReq);
-		List<ComputerDTO> computersDto = computers.stream().map(computer -> ComputerMapper.mapComputerToDTO(computer)).collect(Collectors.toList());
-		
+		List<ComputerDTO> computersDto = computers.stream().map(computer -> ComputerMapper.mapComputerToDTO(computer))
+				.collect(Collectors.toList());
+
 		return new ResponseEntity<List<ComputerDTO>>(computersDto, HttpStatus.OK);
 	}
 
@@ -70,18 +70,17 @@ public class ComputerRestController {
 		if (computer.isPresent()) {
 			computerDTO = ComputerMapper.mapComputerToDTO(computer.get());
 		}
-		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<ComputerDTO>(computerDTO, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ComputerDTO> deleteById(@PathVariable Long id) {
 		computerService.delete(id);
 		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
 	}
-	
+
 	@PostMapping(consumes = "application/json")
-	public ResponseEntity<ComputerDTO>  createComputer(@RequestBody ComputerDTO computerDTO) {
+	public ResponseEntity<ComputerDTO> createComputer(@RequestBody ComputerDTO computerDTO) {
 		try {
 			ValidatorComputerDTO.validate(computerDTO);
 			Computer computer = ComputerMapper.mapDtoToComputer(computerDTO);
@@ -92,7 +91,7 @@ public class ComputerRestController {
 		}
 		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
 	}
-	
+
 	@PutMapping(consumes = "application/json")
 	public ResponseEntity<ComputerDTO> updateComputer(@RequestBody ComputerDTO computerDTO) {
 		try {
@@ -106,8 +105,4 @@ public class ComputerRestController {
 		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
 	}
 
-	private String getToken() {
-		
-		return "";
-	}
 }
