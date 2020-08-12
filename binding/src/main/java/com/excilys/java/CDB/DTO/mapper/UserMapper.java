@@ -34,7 +34,7 @@ public class UserMapper {
 	}
 
 	
-	public static UserDTO mapDtoToUser(User user) {
+	public static UserDTO mapUserToDto(User user) {
 		UserDTO userDTO = new UserDTO();
 		try {
 			if(user.getId() != null) {

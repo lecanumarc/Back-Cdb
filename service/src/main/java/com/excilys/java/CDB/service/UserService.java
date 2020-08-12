@@ -1,8 +1,12 @@
 package com.excilys.java.CDB.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,12 +43,47 @@ public class UserService implements UserDetailsService {
 		return userDAO.findAll();
 	}
 	
-	public void createUser(User user) {
+	public User edit(User user) {
+		return userDAO.save(user);
+	}
+	
+	public Optional<User> findById(long id) {
+		return userDAO.findById(id);
+	}
+	
+	public void add(User user) {
 		userDAO.save(user);
 	}
 	
-	public void deleteUser(User user) {
+	public void delete(User user) {
 		userDAO.delete(user);
+	}
+	
+	public void delete(long id) {
+		userDAO.deleteById(id);
+	}
+	
+	public int count() {
+		return (int) userDAO.count();
+	}
+	
+	public int count(String search) {
+		if(search==null) {
+			return (int) userDAO.count();
+		}else {
+			return userDAO.countByUsernameContaining(search);
+		}
+	}
+	
+	public Page<User> listByPage(String filter, PageRequest pageReq) {
+		return userDAO.findByUsernameContaining(filter, pageReq);
+	}
+
+	public Sort sortBy(String column, boolean ascOrder) {
+		if(ascOrder) {
+			return Sort.by(column).ascending();
+		}
+		return Sort.by(column).descending();
 	}
 
 }

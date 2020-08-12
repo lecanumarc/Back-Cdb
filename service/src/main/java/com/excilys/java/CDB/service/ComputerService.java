@@ -56,7 +56,6 @@ public class ComputerService {
 	}
 
 	public Page<Computer> listByPage(String filter, PageRequest pageReq) {
-		// PageRequest.of(index, rows , sortBy(column, ascOrder))
 		return computerDao.findByNameContaining(filter, pageReq);
 	}
 

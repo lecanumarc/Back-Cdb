@@ -5,15 +5,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.java.CDB.model.User;
+import com.excilys.java.CDB.model.Role;
 
 @Repository
-public interface UserDAO extends JpaRepository<User, Long> {
-	
-	User findByUsername(String username);
-
-	Page<User> findByUsernameContaining(String filter, PageRequest pageReq);
-
-	int countByUsernameContaining(String search);
+public interface RoleDAO extends JpaRepository<Role, Long> {
+	Role findByName(Role name);
+	Page<Role> findByNameContaining(String filter, PageRequest pageReq);
 
 }

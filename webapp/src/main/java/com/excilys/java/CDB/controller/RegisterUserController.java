@@ -43,7 +43,7 @@ private static Logger logger = LoggerFactory.getLogger(RegisterUserController.cl
             roleDTO.setName("USER");
 			userDTO.setRole(roleDTO);
 			User user = UserMapper.mapDtoToUser(userDTO);
-			userService.createUser(user);
+			//userService.createUser(user);
 		}
 
 		logger.info(userDTO.toString());

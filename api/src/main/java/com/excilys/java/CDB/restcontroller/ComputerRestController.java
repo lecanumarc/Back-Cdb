@@ -105,7 +105,7 @@ public class ComputerRestController {
 		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
 	}
 	
-	@GetMapping("/number")
+	@PostMapping("/number")
 	public int numberComputers(@RequestBody DashboardDTO dashboardDTO) {
 		page.setPage(dashboardDTO);
 		return computerService.countComputer(page.getSearch());

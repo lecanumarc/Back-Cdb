@@ -36,6 +36,7 @@ public class CompanyService {
 	}
 
 	public void delete(long id) {
+		//TO DO: on cascade ?
 		companyDao.deleteById(id);
 	}
 
@@ -48,7 +49,6 @@ public class CompanyService {
 	}
 	
 	public Page<Company> listByPage(String filter, PageRequest pageReq) {
-		//PageRequest.of(index, rows , sortBy(column, ascOrder))
 		return companyDao.findByNameContaining(filter, pageReq);
 	}
 
@@ -63,10 +63,4 @@ public class CompanyService {
 		return companyDao.findAll();
 	}
 
-//	public List<Company> getListPage(Pagination page){
-//		Pageable pageRequest = PageRequest.of(page.getCurrentPage()-1, page.getLinesPage());
-//		Page<Company> companiesPage = companyDAO.findAll(pageRequest);
-//		return companiesPage.getContent();
-//	}
-	
 }
