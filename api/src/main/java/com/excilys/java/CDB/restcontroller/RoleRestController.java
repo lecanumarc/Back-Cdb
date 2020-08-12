@@ -30,7 +30,7 @@ import com.excilys.java.CDB.validator.ValidatorRoleDTO;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("users")
+@RequestMapping("roles")
 public class RoleRestController {
 	private DashboardDTO page = new DashboardDTO();
 	private RoleService roleService;

@@ -7,32 +7,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.java.CDB.model.Role;
 import com.excilys.java.CDB.model.User;
 import com.excilys.java.CDB.persistence.DAO.RoleDAO;
+import com.excilys.java.CDB.persistence.DAO.UserDAO;
 
 @Service
 public class RoleService {
 
-	@Autowired
 	private RoleDAO roleDAO; 
+	private UserDAO userDAO; 
 
 	@Autowired
-	public RoleService(RoleDAO roleDAO){
+	public RoleService(RoleDAO roleDAO, UserDAO userDAO){
 		this.roleDAO = roleDAO;
+		this.userDAO = userDAO;
 	}
 
 	public Role add(Role role) {
 		return roleDAO.save(role);
 	}
 
+	@Transactional
 	public void delete(long id) {
-		//TO DO: on cascade ?
+		List<User> users = userDAO.findAllByRoleId(id);
+		users.stream().forEach((User user) -> {userDAO.delete(user);});
 		roleDAO.deleteById(id);
 	}
 

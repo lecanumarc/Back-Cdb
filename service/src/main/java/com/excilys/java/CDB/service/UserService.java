@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.excilys.java.CDB.model.Computer;
 import com.excilys.java.CDB.model.User;
 import com.excilys.java.CDB.persistence.DAO.UserDAO;
 
@@ -20,7 +21,7 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private UserDAO userDAO; 
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		if (username.trim().isEmpty()) {
@@ -32,41 +33,41 @@ public class UserService implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException("User " + username + " not found");
 		}
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .roles(user.getRole().getName())
-                .build();
+		return org.springframework.security.core.userdetails.User.builder()
+				.username(user.getUsername())
+				.password(user.getPassword())
+				.roles(user.getRole().getName())
+				.build();
 	}
-	
+
 	public List<User> listUsers() {
 		return userDAO.findAll();
 	}
-	
+
 	public User edit(User user) {
 		return userDAO.save(user);
 	}
-	
+
 	public Optional<User> findById(long id) {
 		return userDAO.findById(id);
 	}
-	
+
 	public void add(User user) {
 		userDAO.save(user);
 	}
-	
+
 	public void delete(User user) {
 		userDAO.delete(user);
 	}
-	
+
 	public void delete(long id) {
 		userDAO.deleteById(id);
 	}
-	
+
 	public int count() {
 		return (int) userDAO.count();
 	}
-	
+
 	public int count(String search) {
 		if(search==null) {
 			return (int) userDAO.count();
@@ -75,6 +76,10 @@ public class UserService implements UserDetailsService {
 		}
 	}
 	
+	public List<User> listByRoleId(long id) {
+		return userDAO.findAllByRoleId(id);
+	}
+
 	public Page<User> listByPage(String filter, PageRequest pageReq) {
 		return userDAO.findByUsernameContaining(filter, pageReq);
 	}

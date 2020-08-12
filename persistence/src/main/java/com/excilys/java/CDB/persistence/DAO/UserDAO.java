@@ -1,5 +1,7 @@
 package com.excilys.java.CDB.persistence.DAO;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +17,7 @@ public interface UserDAO extends JpaRepository<User, Long> {
 	Page<User> findByUsernameContaining(String filter, PageRequest pageReq);
 
 	int countByUsernameContaining(String search);
+
+	List<User> findAllByRoleId(long id);
 
 }

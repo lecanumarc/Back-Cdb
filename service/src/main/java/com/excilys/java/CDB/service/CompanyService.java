@@ -2,29 +2,36 @@ package com.excilys.java.CDB.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.excilys.java.CDB.DTO.mapper.ComputerMapper;
 import com.excilys.java.CDB.model.Company;
+import com.excilys.java.CDB.model.Computer;
 import com.excilys.java.CDB.persistence.DAO.CompanyDAO;
+import com.excilys.java.CDB.persistence.DAO.ComputerDAO;
 
 @Service
 public class CompanyService {
-	
+
 	/**
 	 *  Class doing the relation with the CompanyDAO  
 	 *  @author ninonV
 	 *  **/
-	
+
 	private CompanyDAO companyDao;
-	
+	private ComputerDAO computerDao;
+
 	@Autowired
-	public CompanyService(CompanyDAO companyDao) {
+	public CompanyService(CompanyDAO companyDao, ComputerDAO computerDao) {
 		this.companyDao = companyDao;
+		this.computerDao = computerDao;
 	}
 
 	public void add(Company obj) {
@@ -35,9 +42,11 @@ public class CompanyService {
 		companyDao.save(obj);
 	}
 
+	@Transactional
 	public void delete(long id) {
-		//TO DO: on cascade ?
-		companyDao.deleteById(id);
+		List<Computer> computers = computerDao.findAllByCompanyId(id);
+		computers.stream().forEach((Computer computer) -> {computerDao.delete(computer);});
+		companyDao.deleteById(id);  
 	}
 
 	public Optional<Company> findById(Long id) {
@@ -47,7 +56,7 @@ public class CompanyService {
 	public Page<Company> listByPage(int index, int rows) {
 		return companyDao.findAll(PageRequest.of(index, rows));
 	}
-	
+
 	public Page<Company> listByPage(String filter, PageRequest pageReq) {
 		return companyDao.findByNameContaining(filter, pageReq);
 	}
@@ -58,7 +67,7 @@ public class CompanyService {
 		}
 		return Sort.by(column).descending();
 	}
-	
+
 	public List<Company> listCompanies() {
 		return companyDao.findAll();
 	}
