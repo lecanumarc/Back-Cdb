@@ -1,6 +1,7 @@
 package com.excilys.java.CDB.validator;
 
 import com.excilys.java.CDB.DTO.UserDTO;
+import com.excilys.java.CDB.exception.RoleException;
 import com.excilys.java.CDB.exception.UserException;
 
 public class ValidatorUserDTO {
@@ -21,5 +22,12 @@ public class ValidatorUserDTO {
 		}
 		validatorName(userDto.getUsername());
 		validatorId(userDto.getUserId());
+		if(userDto.getRole() != null) {
+			try {
+				ValidatorRoleDTO.validate(userDto.getRole());
+			} catch (RoleException e) {
+				throw new UserException("Error in userDTO's role");
+			}
+		}
 	}
 }

@@ -56,6 +56,18 @@ public class RoleService {
 		return roleDAO.findByNameContaining(filter, pageReq);
 	}
 	
+	public List<Role> listRoles() {
+		return roleDAO.findAll();
+	}
+	
+	public int count(String search) {
+		if(search==null) {
+			return (int) roleDAO.count();
+		}else {
+			return roleDAO.countByNameContaining(search);
+		}
+	}
+	
 	public Sort sortBy(String column, boolean ascOrder) {
 		if(ascOrder) {
 			return Sort.by(column).ascending();
