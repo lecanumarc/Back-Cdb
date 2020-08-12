@@ -30,6 +30,7 @@
 		<springJPA.version>2.3.1.RELEASE</springJPA.version>
 		<spring-security.version>5.3.3.RELEASE</spring-security.version>
 		<jackson.version>2.11.1</jackson.version>
+		<io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
 
 	</properties>
 

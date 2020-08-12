@@ -22,13 +22,12 @@ public class UserService implements UserDetailsService {
 		if (username.trim().isEmpty()) {
 			throw new UsernameNotFoundException("Username is empty");
 		}
- 
+
 		User user = userDAO.findByUsername(username);
- 
+
 		if (user == null) {
 			throw new UsernameNotFoundException("User " + username + " not found");
 		}
-		
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())

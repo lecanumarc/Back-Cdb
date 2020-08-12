@@ -91,6 +91,7 @@ public class CompanyRestController {
 			companyService.add(company);
 		} catch (CompanyException e) {
 			e.printStackTrace();
+			return new ResponseEntity<CompanyDTO>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<CompanyDTO>(HttpStatus.OK);
 	}

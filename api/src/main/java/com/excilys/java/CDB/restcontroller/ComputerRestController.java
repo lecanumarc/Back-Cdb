@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,7 +33,6 @@ import com.excilys.java.CDB.validator.ValidatorComputerDTO;
 @RestController
 @RequestMapping("computers")
 public class ComputerRestController {
-	
 	private DashboardDTO page = new DashboardDTO();
 	private ComputerService computerService;
 
@@ -70,6 +70,7 @@ public class ComputerRestController {
 		if (computer.isPresent()) {
 			computerDTO = ComputerMapper.mapComputerToDTO(computer.get());
 		}
+		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<ComputerDTO>(computerDTO, HttpStatus.OK);
 	}
 	
@@ -93,7 +94,7 @@ public class ComputerRestController {
 	}
 	
 	@PutMapping(consumes = "application/json")
-	public ResponseEntity<ComputerDTO>  updateComputer(@RequestBody ComputerDTO computerDTO) {
+	public ResponseEntity<ComputerDTO> updateComputer(@RequestBody ComputerDTO computerDTO) {
 		try {
 			ValidatorComputerDTO.validate(computerDTO);
 			Computer computer = ComputerMapper.mapDtoToComputer(computerDTO);
@@ -103,7 +104,10 @@ public class ComputerRestController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
-		
 	}
 
+	private String getToken() {
+		
+		return "";
+	}
 }
