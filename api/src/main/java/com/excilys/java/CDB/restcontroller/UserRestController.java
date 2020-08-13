@@ -53,7 +53,7 @@ public class UserRestController {
 	@PostMapping("/page")
 	public ResponseEntity<List<UserDTO>> listUsers(@RequestBody DashboardDTO dashboardDTO) {
 		page.setPage(dashboardDTO);
-		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()), Integer.parseInt(page.getLinesNb()),
+		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()) - 1, Integer.parseInt(page.getLinesNb()),
 				userService.sortBy(page.getColumn(), Boolean.valueOf(page.getAscOrder())));
 
 		Page<User> users = userService.listByPage(page.getSearch(), pageReq);

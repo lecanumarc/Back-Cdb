@@ -53,7 +53,7 @@ public class RoleRestController {
 	@PostMapping("/page")
 	public ResponseEntity<List<RoleDTO>> listRoles(@RequestBody DashboardDTO dashboardDTO) {
 		page.setPage(dashboardDTO);
-		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()), Integer.parseInt(page.getLinesNb()),
+		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()) - 1, Integer.parseInt(page.getLinesNb()),
 				roleService.sortBy(page.getColumn(), Boolean.valueOf(page.getAscOrder())));
 
 		Page<Role> users = roleService.listByPage(page.getSearch(), pageReq);

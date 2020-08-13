@@ -56,7 +56,7 @@ public class CompanyRestController {
 
 		page.setPage(dashboardDTO);
 
-		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()),
+		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()) - 1,
 				Integer.parseInt(page.getLinesNb()),
 				companyService.sortBy(page.getColumn(), Boolean.valueOf(page.getAscOrder())));
 
