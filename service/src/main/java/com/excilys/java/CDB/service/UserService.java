@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -56,12 +57,10 @@ public class UserService implements UserDetailsService {
 		userDAO.save(user);
 	}
 
-	public void delete(User user) {
-		userDAO.delete(user);
-	}
-
 	public void delete(long id) {
-		userDAO.deleteById(id);
+		if (userDAO.existsById(id)) {
+			userDAO.deleteById(id);
+		}
 	}
 
 	public int count() {
@@ -75,7 +74,7 @@ public class UserService implements UserDetailsService {
 			return userDAO.countByUsernameContaining(search);
 		}
 	}
-	
+
 	public List<User> listByRoleId(long id) {
 		return userDAO.findAllByRoleId(id);
 	}

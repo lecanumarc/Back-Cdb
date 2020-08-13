@@ -33,9 +33,11 @@ public class RoleService {
 
 	@Transactional
 	public void delete(long id) {
-		List<User> users = userDAO.findAllByRoleId(id);
-		users.stream().forEach((User user) -> {userDAO.delete(user);});
-		roleDAO.deleteById(id);
+		if (roleDAO.existsById(id)) {
+			List<User> users = userDAO.findAllByRoleId(id);
+			users.stream().forEach((User user) -> {userDAO.delete(user);});
+			roleDAO.deleteById(id);
+		}
 	}
 
 	public Role edit(Role role) {
@@ -57,11 +59,11 @@ public class RoleService {
 	public Page<Role> listByPage(String filter, PageRequest pageReq) {
 		return roleDAO.findByNameContaining(filter, pageReq);
 	}
-	
+
 	public List<Role> listRoles() {
 		return roleDAO.findAll();
 	}
-	
+
 	public int count(String search) {
 		if(search==null) {
 			return (int) roleDAO.count();
@@ -69,7 +71,7 @@ public class RoleService {
 			return roleDAO.countByNameContaining(search);
 		}
 	}
-	
+
 	public Sort sortBy(String column, boolean ascOrder) {
 		if(ascOrder) {
 			return Sort.by(column).ascending();

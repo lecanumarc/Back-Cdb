@@ -32,7 +32,9 @@ public class ComputerService {
 	}
 
 	public void delete(long id) {
-		computerDao.deleteById(id);
+		if(computerDao.existsById(id)){
+			computerDao.deleteById(id);
+		}
 	}
 
 	public Computer edit(Computer computer) {
@@ -69,7 +71,7 @@ public class ComputerService {
 	public List<Computer> listComputers() {
 		return computerDao.findAll();
 	}
-	
+
 	public int countComputer(String search) {
 		if(search==null) {
 			return (int) computerDao.count();
