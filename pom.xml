@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.excilys.java</groupId>
@@ -32,6 +34,8 @@
 		<jackson.version>2.11.1</jackson.version>
 		<io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
 		<swagger.version>2.9.2</swagger.version>
+		<h2.version>1.4.199</h2.version>
+		<spring-test-dbunit.version>1.2.1</spring-test-dbunit.version>
 
 	</properties>
 
@@ -71,5 +75,5 @@
 		<module>binding</module>
 		<module>console</module>
 		<module>webapp</module>
-  </modules>
+	</modules>
 </project>
