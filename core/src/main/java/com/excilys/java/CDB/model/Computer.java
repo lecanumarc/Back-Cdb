@@ -27,7 +27,7 @@ public class Computer {
 	private LocalDate introduced;
 	private LocalDate discontinued;
 	@ManyToOne
-	@JoinColumn(name = "company_id")
+	@JoinColumn(name = "company_id", nullable = true)
 	private Company company;
 
 	private Computer() {}

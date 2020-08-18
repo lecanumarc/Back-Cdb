@@ -69,14 +69,18 @@ public class ComputerRestController {
 		Optional<Computer> computer = computerService.findById(id);
 		if (computer.isPresent()) {
 			computerDTO = ComputerMapper.mapComputerToDTO(computer.get());
+
+			return new ResponseEntity<ComputerDTO>(computerDTO, HttpStatus.OK);
 		}
-		return new ResponseEntity<ComputerDTO>(computerDTO, HttpStatus.OK);
+		return new ResponseEntity<ComputerDTO>(computerDTO, HttpStatus.NOT_FOUND);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ComputerDTO> deleteById(@PathVariable Long id) {
-		computerService.delete(id);
-		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
+		if(computerService.delete(id)) {
+			return new ResponseEntity<ComputerDTO>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<ComputerDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@PostMapping(consumes = "application/json")
@@ -88,8 +92,9 @@ public class ComputerRestController {
 			computerService.add(computer);
 		} catch (ComputerException e) {
 			e.printStackTrace();
+			return new ResponseEntity<ComputerDTO>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
+		return new ResponseEntity<ComputerDTO>(HttpStatus.CREATED);
 	}
 
 	@PutMapping(consumes = "application/json")
@@ -101,10 +106,11 @@ public class ComputerRestController {
 			computerService.edit(computer);
 		} catch (ComputerException e) {
 			e.printStackTrace();
+			return new ResponseEntity<ComputerDTO>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
+		return new ResponseEntity<ComputerDTO>(HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping("/number")
 	public int numberComputers(@RequestBody DashboardDTO dashboardDTO) {
 		page.setPage(dashboardDTO);

@@ -69,14 +69,17 @@ public class RoleRestController {
 		Optional<Role> role = roleService.findById(id);
 		if (role.isPresent()) {
 			userDTO = RoleMapper.mapRoleToDto(role.get());
+			return new ResponseEntity<RoleDTO>(userDTO, HttpStatus.OK);
 		}
-		return new ResponseEntity<RoleDTO>(userDTO, HttpStatus.OK);
+		return new ResponseEntity<RoleDTO>(userDTO, HttpStatus.NOT_FOUND);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<RoleDTO> deleteById(@PathVariable Long id) {
-		roleService.delete(id);
-		return new ResponseEntity<RoleDTO>(HttpStatus.OK);
+		if(roleService.delete(id)) {
+			return new ResponseEntity<RoleDTO>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<RoleDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@PostMapping(consumes = "application/json")
@@ -88,8 +91,9 @@ public class RoleRestController {
 			roleService.add(role);
 		} catch (RoleException e) {
 			e.printStackTrace();
+			return new ResponseEntity<RoleDTO>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<RoleDTO>(HttpStatus.OK);
+		return new ResponseEntity<RoleDTO>(HttpStatus.CREATED);
 	}
 
 	@PutMapping(consumes = "application/json")
@@ -101,8 +105,9 @@ public class RoleRestController {
 			roleService.edit(role);
 		} catch (RoleException e) {
 			e.printStackTrace();
+			return new ResponseEntity<RoleDTO>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<RoleDTO>(HttpStatus.OK);
+		return new ResponseEntity<RoleDTO>(HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/number")
