@@ -53,7 +53,8 @@ public class ComputerRestController {
 	@PostMapping("/page")
 	public ResponseEntity<List<ComputerDTO>> listComputers(@RequestBody DashboardDTO dashboardDTO) {
 		page.setPage(dashboardDTO);
-		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()), Integer.parseInt(page.getLinesNb()),
+		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()) - 1,
+				Integer.parseInt(page.getLinesNb()),
 				computerService.sortBy(page.getColumn(), Boolean.valueOf(page.getAscOrder())));
 
 		Page<Computer> computers = computerService.listByPage(page.getSearch(), pageReq);
@@ -104,7 +105,7 @@ public class ComputerRestController {
 		}
 		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/number")
 	public int numberComputers(@RequestBody DashboardDTO dashboardDTO) {
 		page.setPage(dashboardDTO);

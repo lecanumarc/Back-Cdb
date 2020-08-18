@@ -28,9 +28,8 @@ import com.excilys.java.CDB.service.CompanyService;
 import com.excilys.java.CDB.validator.ValidatorCompany;
 import com.excilys.java.CDB.validator.ValidatorCompanyDTO;
 
-
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "*")
 @RequestMapping("companies")
 public class CompanyRestController {
 
@@ -46,22 +45,22 @@ public class CompanyRestController {
 	public ResponseEntity<List<CompanyDTO>> listCompanies() {
 		List<Company> companies = companyService.listCompanies();
 
-		List<CompanyDTO> companiesDto = companies.stream().map(company -> CompanyMapper.mapCompanyToDTO(company)).collect(Collectors.toList());
+		List<CompanyDTO> companiesDto = companies.stream().map(company -> CompanyMapper.mapCompanyToDTO(company))
+				.collect(Collectors.toList());
 
 		return new ResponseEntity<List<CompanyDTO>>(companiesDto, HttpStatus.OK);
 	}
 
-	@GetMapping("/page")
+	@PostMapping("/page")
 	public ResponseEntity<List<CompanyDTO>> listCompanies(@RequestBody DashboardDTO dashboardDTO) {
-
 		page.setPage(dashboardDTO);
-
 		PageRequest pageReq = PageRequest.of(Integer.parseInt(page.getPageNb()) - 1,
 				Integer.parseInt(page.getLinesNb()),
 				companyService.sortBy(page.getColumn(), Boolean.valueOf(page.getAscOrder())));
 
-		Page<Company> companies = companyService.listByPage(page.getSearch(), pageReq);
-		List<CompanyDTO> companiesDto = companies.stream().map(company->CompanyMapper.mapCompanyToDTO(company)).collect(Collectors.toList());
+		Page<Company> companiesPage = companyService.listByPage(page.getSearch(), pageReq);
+		List<CompanyDTO> companiesDto = companiesPage.stream().map(CompanyMapper::mapCompanyToDTO)
+				.collect(Collectors.toList());
 
 		return new ResponseEntity<List<CompanyDTO>>(companiesDto, HttpStatus.OK);
 	}
@@ -83,7 +82,7 @@ public class CompanyRestController {
 	}
 
 	@PostMapping(consumes = "application/json")
-	public ResponseEntity<CompanyDTO>  createComputer(@RequestBody CompanyDTO companyDTO) {
+	public ResponseEntity<CompanyDTO> createComputer(@RequestBody CompanyDTO companyDTO) {
 		try {
 			ValidatorCompanyDTO.validate(companyDTO);
 			Company company = CompanyMapper.mapDtoToCompany(companyDTO);
@@ -95,9 +94,9 @@ public class CompanyRestController {
 		}
 		return new ResponseEntity<CompanyDTO>(HttpStatus.OK);
 	}
-	
+
 	@PutMapping(consumes = "application/json")
-	public ResponseEntity<CompanyDTO>  updateCompany(@RequestBody CompanyDTO companyDTO) {
+	public ResponseEntity<CompanyDTO> updateCompany(@RequestBody CompanyDTO companyDTO) {
 		try {
 			ValidatorCompanyDTO.validate(companyDTO);
 			Company company = CompanyMapper.mapDtoToCompany(companyDTO);
@@ -107,6 +106,12 @@ public class CompanyRestController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<CompanyDTO>(HttpStatus.OK);
-		
+
+	}
+
+	@PostMapping("/number")
+	public int numberComputers(@RequestBody DashboardDTO dashboardDTO) {
+		page.setPage(dashboardDTO);
+		return companyService.countCompanies(page.getSearch());
 	}
 }

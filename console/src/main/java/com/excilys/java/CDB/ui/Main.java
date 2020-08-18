@@ -11,7 +11,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		context = new AnnotationConfigApplicationContext(SpringConfigUI.class);
-		UserInterface user= context.getBean(UserInterface.class);
+		UserInterface user = context.getBean(UserInterface.class);
 		user.start();
 	}
 }

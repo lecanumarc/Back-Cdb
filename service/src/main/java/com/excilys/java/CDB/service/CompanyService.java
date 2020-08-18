@@ -2,7 +2,6 @@ package com.excilys.java.CDB.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.excilys.java.CDB.DTO.mapper.ComputerMapper;
 import com.excilys.java.CDB.model.Company;
 import com.excilys.java.CDB.model.Computer;
 import com.excilys.java.CDB.persistence.DAO.CompanyDAO;
@@ -21,9 +19,10 @@ import com.excilys.java.CDB.persistence.DAO.ComputerDAO;
 public class CompanyService {
 
 	/**
-	 *  Class doing the relation with the CompanyDAO  
-	 *  @author ninonV
-	 *  **/
+	 * Class doing the relation with the CompanyDAO
+	 * 
+	 * @author ninonV
+	 **/
 
 	private CompanyDAO companyDao;
 	private ComputerDAO computerDao;
@@ -46,8 +45,10 @@ public class CompanyService {
 	public void delete(long id) {
 		if (companyDao.existsById(id)) {
 			List<Computer> computers = computerDao.findAllByCompanyId(id);
-			computers.stream().forEach((Computer computer) -> {computerDao.delete(computer);});
-			companyDao.deleteById(id); 
+			computers.stream().forEach((Computer computer) -> {
+				computerDao.delete(computer);
+			});
+			companyDao.deleteById(id);
 		}
 
 	}
@@ -65,7 +66,7 @@ public class CompanyService {
 	}
 
 	public Sort sortBy(String column, boolean ascOrder) {
-		if(ascOrder) {
+		if (ascOrder) {
 			return Sort.by(column).ascending();
 		}
 		return Sort.by(column).descending();
@@ -73,6 +74,14 @@ public class CompanyService {
 
 	public List<Company> listCompanies() {
 		return companyDao.findAll();
+	}
+
+	public int countCompanies(String search) {
+		if (search == null) {
+			return (int) companyDao.count();
+		} else {
+			return companyDao.countByNameContaining(search);
+		}
 	}
 
 }
