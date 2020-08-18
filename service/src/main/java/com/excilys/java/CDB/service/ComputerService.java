@@ -58,7 +58,7 @@ public class ComputerService {
 	}
 
 	public Page<Computer> listByPage(String filter, PageRequest pageReq) {
-		return computerDao.findByNameContaining(filter, pageReq);
+		return computerDao.filteredPage(filter, pageReq);
 	}
 
 	public Sort sortBy(String column, boolean ascOrder) {

@@ -19,7 +19,7 @@ import com.excilys.java.CDB.jwt.JwtTokenUtil;
 import com.excilys.java.CDB.jwt.JwtUserDetailsService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class JwtAuthenticationController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
