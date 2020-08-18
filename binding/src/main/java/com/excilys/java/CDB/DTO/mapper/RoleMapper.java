@@ -17,15 +17,17 @@ public class RoleMapper {
 	 * @return role
 	 */
 	public static Role mapDtoToRole(RoleDTO roleDTO) {
-		Role role = new Role();
+		Role role = null;
 		try {
 			if(roleDTO != null) {
+				Role.Builder builder = new Role.Builder();
 				if (roleDTO.getId() != null) {
-					role.setId(Long.valueOf(roleDTO.getId()));
+					builder.setId(Long.valueOf(roleDTO.getId()));
 				}
 				if (roleDTO.getName() != null) {
-					role.setName(roleDTO.getName());
+					builder.setName(roleDTO.getName());
 				}
+				role = builder.build();
 			}
 
 		} catch (Exception e) {

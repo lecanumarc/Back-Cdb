@@ -30,16 +30,37 @@ public class Role {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String Name) {
-		this.name = Name;
+
+	public static class Builder {
+		private Long id;
+		private String name;
+
+		public Builder setId(Long id) {
+			this.id = id;
+			return this;
+		}
+
+		public Builder setName(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public Role build() {
+			Role role = new Role();
+			role.id = this.id;
+			role.name = this.name;
+			return role;
+		}
+	}
+
+
+	@Override
+	public String toString() {
+		return "Role [id=" + id + ", name=" + name + "]";
 	}
 
 }
