@@ -41,7 +41,7 @@ public class RoleDAOTest {
 				.build();
 		
 		roleDAO.save(role);
-		Role roleFound = roleDAO.findById((long)3).get();
+		Role roleFound = roleDAO.findById(new Long(3)).get();
 		assertEquals("Error during role add", roleFound.getId(), role.getId());
 		assertEquals("Error during role add", roleFound.getName(), role.getName());
 
@@ -68,14 +68,13 @@ public class RoleDAOTest {
 		List<User> users = userDAO.findAllByRoleId(roleId);
 		users.stream().forEach((User user) -> {userDAO.delete(user);});
 		roleDAO.deleteById(roleId);
-
-		assertEquals("Wrong number of users linked to a specific role", 2, users.size());
+		assertEquals("Wrong number of users linked to a specific role", 1, users.size());
 		assertFalse("Role still exists after deletion", roleDAO.existsById(roleId));
 		assertEquals("linked users still exist after role deletion", 0, userDAO.findAllByRoleId(roleId).size());
 	}
 
 	@Test(expected = org.springframework.dao.DataIntegrityViolationException.class)
-	public void invalidDeleteRoleWithLinkedComputers() {
+	public void invalidDeleteRoleWithLinkedUsers() {
 		roleDAO.deleteById(new Long(1));
 	}
 	
@@ -95,7 +94,6 @@ public class RoleDAOTest {
 
 		assertEquals("role's name is incorrect", roleExpected.getName(), roleFound.getName());
 		assertEquals("role's id is incorrect", roleExpected.getId(), roleFound.getId());
-		assertEquals("Error during role finding", roleExpected, roleFound);
 	}
 
 	@Test
@@ -113,9 +111,9 @@ public class RoleDAOTest {
 				.setId(new Long(1))
 				.build();
 		assertTrue("page has empty content", page.hasContent());
-		assertEquals("Wrong amount of lines", 2, page.getSize());
-		assertEquals("Wrong first role value", firstRole, list.get(0));
-		assertEquals("Wrong last role value", lastRole, list.get(1));
+		assertEquals("Wrong amount of lines", rows, page.getSize());
+		assertEquals("Wrong first role value", firstRole.getName(), list.get(0).getName());
+		assertEquals("Wrong last role value", lastRole.getName(), list.get(1).getName());
 	}
 
 	@Test
