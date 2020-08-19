@@ -57,10 +57,12 @@ public class UserService implements UserDetailsService {
 		userDAO.save(user);
 	}
 
-	public void delete(long id) {
+	public boolean delete(long id) {
 		if (userDAO.existsById(id)) {
 			userDAO.deleteById(id);
+			return true;
 		}
+		return false;
 	}
 
 	public int count() {

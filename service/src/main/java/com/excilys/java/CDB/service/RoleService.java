@@ -32,12 +32,14 @@ public class RoleService {
 	}
 
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		if (roleDAO.existsById(id)) {
 			List<User> users = userDAO.findAllByRoleId(id);
 			users.stream().forEach((User user) -> {userDAO.delete(user);});
 			roleDAO.deleteById(id);
+			return true;
 		}
+		return false;
 	}
 
 	public Role edit(Role role) {

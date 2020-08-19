@@ -71,14 +71,17 @@ public class CompanyRestController {
 		Optional<Company> company = companyService.findById(id);
 		if (company.isPresent()) {
 			companyDTO = CompanyMapper.mapCompanyToDTO(company.get());
+			return new ResponseEntity<CompanyDTO>(companyDTO, HttpStatus.OK);
 		}
-		return new ResponseEntity<CompanyDTO>(companyDTO, HttpStatus.OK);
+		return new ResponseEntity<CompanyDTO>(companyDTO, HttpStatus.NOT_FOUND);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<CompanyDTO> deleteById(@PathVariable Long id) {
-		companyService.delete(id);
-		return new ResponseEntity<CompanyDTO>(HttpStatus.OK);
+		if (companyService.delete(id)) {
+			return new ResponseEntity<CompanyDTO>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<CompanyDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@PostMapping(consumes = "application/json")
@@ -92,7 +95,7 @@ public class CompanyRestController {
 			e.printStackTrace();
 			return new ResponseEntity<CompanyDTO>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<CompanyDTO>(HttpStatus.OK);
+		return new ResponseEntity<CompanyDTO>(HttpStatus.CREATED);
 	}
 
 	@PutMapping(consumes = "application/json")
@@ -104,6 +107,7 @@ public class CompanyRestController {
 			companyService.edit(company);
 		} catch (CompanyException e) {
 			e.printStackTrace();
+			return new ResponseEntity<CompanyDTO>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<CompanyDTO>(HttpStatus.OK);
 

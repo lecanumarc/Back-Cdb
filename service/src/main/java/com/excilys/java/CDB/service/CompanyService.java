@@ -42,14 +42,16 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		if (companyDao.existsById(id)) {
 			List<Computer> computers = computerDao.findAllByCompanyId(id);
 			computers.stream().forEach((Computer computer) -> {
 				computerDao.delete(computer);
 			});
 			companyDao.deleteById(id);
+			return true;
 		}
+		return false;
 
 	}
 

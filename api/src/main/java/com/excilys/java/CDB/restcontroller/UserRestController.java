@@ -69,14 +69,17 @@ public class UserRestController {
 		Optional<User> user = userService.findById(id);
 		if (user.isPresent()) {
 			userDTO = UserMapper.mapUserToDto(user.get());
+			return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 		}
-		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.NOT_FOUND);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<UserDTO> deleteById(@PathVariable Long id) {
-		userService.delete(id);
-		return new ResponseEntity<UserDTO>(HttpStatus.OK);
+		if(userService.delete(id)) {
+			return new ResponseEntity<UserDTO>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@PostMapping(consumes = "application/json")
@@ -88,8 +91,9 @@ public class UserRestController {
 			userService.add(user);
 		} catch (UserException e) {
 			e.printStackTrace();
+			return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<UserDTO>(HttpStatus.OK);
+		return new ResponseEntity<UserDTO>(HttpStatus.CREATED);
 	}
 
 	@PutMapping(consumes = "application/json")
@@ -101,8 +105,9 @@ public class UserRestController {
 			userService.edit(user);
 		} catch (UserException e) {
 			e.printStackTrace();
+			return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<UserDTO>(HttpStatus.OK);
+		return new ResponseEntity<UserDTO>(HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/number")

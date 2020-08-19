@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.ws.rs.NotFoundException;
+
 import org.springframework.stereotype.Component;
 
 import com.excilys.java.CDB.jersey.CompanyJersey;
@@ -23,13 +25,15 @@ import com.excilys.java.CDB.model.Pagination;
 @Component
 public class UserInterface {
 
+	private Scanner sc;
+
 	/**
 	 * Main menu that calls the different functions
 	 */
-
 	public void start() {
 
 		boolean quit = false;
+		sc = new Scanner(System.in);
 		while (!quit) {
 			try {
 				System.out.println("Features : ");
@@ -41,21 +45,16 @@ public class UserInterface {
 				System.out.println("\t 6- Delete a computer");
 				System.out.println("\t 7- Delete a company");
 				System.out.println("\t 8- Quit");
-
 				System.out.println("What do you want to do ? ");
-				Scanner sc = new Scanner(System.in);
 				String choice = sc.nextLine();
 				int choiceInt = Integer.parseInt(choice);
-
 				switch (choiceInt) {
 				case 1:
 					pagesComputers();
 					break;
-
 				case 2:
 					pagesCompanies();
 					break;
-
 				case 3:
 					Long idC = getID();
 					if (ComputerJersey.existComputer(idC)) {
@@ -65,14 +64,12 @@ public class UserInterface {
 						System.out.println("This computer does not exist");
 					}
 					break;
-
 				case 4:
 					System.out.println("What is the computer that you want to create : ");
 					Computer computerCreate = infoComputer();
 					ComputerJersey.createComputer(computerCreate);
 					System.out.println("Computer created with success");
 					break;
-
 				case 5:
 					System.out.println("Which computer do you want to update: ");
 					Long idComputer = getID();
@@ -81,15 +78,16 @@ public class UserInterface {
 						System.out.println(computerIdUpdate);
 						System.out.println("Complete the new informations : ");
 						Computer computerUpdate = infoComputer();
-						// TO DO : use builder
-						// computerUpdate.setId(idComputer);
-						ComputerJersey.updateComputer(computerUpdate);
+						Computer computer2 = new Computer.Builder().setId(idComputer).setName(computerUpdate.getName())
+								.setIntroduced(computerUpdate.getIntroduced())
+								.setDiscontinued(computerUpdate.getDiscontinued())
+								.setCompany(computerUpdate.getCompany()).build();
+						ComputerJersey.updateComputer(computer2);
 						System.out.println("Computer updated with success");
 					} else {
 						System.out.println("This computer does not exist");
 					}
 					break;
-
 				case 6:
 					System.out.println("Which computer do you want to delete: ");
 					Long idComputerDelete = getID();
@@ -110,7 +108,6 @@ public class UserInterface {
 						System.out.println(companyIdDelete);
 						CompanyJersey.deleteCompany(idCompanyDelete);
 						System.out.println("Company ans computers of the company deleted with success");
-
 					} else {
 						System.out.println("This company does not exist");
 					}
@@ -124,8 +121,8 @@ public class UserInterface {
 			} catch (java.lang.NumberFormatException e) {
 				System.err.println("Enter a number between 1 and 7");
 			}
-
 		}
+		sc.close();
 	}
 
 	/**
@@ -134,12 +131,9 @@ public class UserInterface {
 	 * @return Long id
 	 */
 	public Long getID() {
-
 		System.out.println("ID : ");
-		Scanner sc = new Scanner(System.in);
 		String idC = sc.nextLine();
 		Long id = null;
-
 		try {
 			id = Long.valueOf(idC);
 		} catch (java.lang.NumberFormatException e) {
@@ -155,7 +149,6 @@ public class UserInterface {
 	 * @return Computer
 	 */
 	public Computer infoComputer() {
-		Scanner sc = new Scanner(System.in);
 		Boolean conditionsOK = false;
 		String name = null;
 		String intro = "";
@@ -167,32 +160,30 @@ public class UserInterface {
 		Company company = null;
 		Computer computer = null;
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
-
 		while (!conditionsOK) {
 			System.out.println("Name : ");
 			name = sc.nextLine();
-
-			System.out.println("Date of introduction (YYYY-MM-DD) : ");
+			System.out.println("Date of introduction (YYYY-MM-DD) or enter: ");
 			intro = sc.nextLine();
 			if (intro.length() > 0) {
 				try {
 					introduced = LocalDate.parse(intro, formatter);
 				} catch (java.time.format.DateTimeParseException e) {
 					System.err.println("Enter the following format YYYY-MM-DD");
+					conditionsOK = false;
 				}
 			}
-
-			System.out.println("Date of discontinuation (YYYY-MM-DD) : ");
+			System.out.println("Date of discontinuation (YYYY-MM-DD) or enter: ");
 			discon = sc.nextLine();
 			if (discon.length() > 0) {
 				try {
 					discontinued = LocalDate.parse(discon, formatter);
 				} catch (java.time.format.DateTimeParseException e) {
 					System.err.println("Enter the following format YYYY-MM-DD");
+					conditionsOK = false;
 				}
 			}
-
-			System.out.println("ID of the company : ");
+			System.out.println("ID of the company or enter: ");
 			try {
 				id = sc.nextLine();
 				if (id.length() > 0) {
@@ -201,13 +192,18 @@ public class UserInterface {
 				}
 			} catch (java.lang.NumberFormatException e) {
 				System.err.println("Enter a number");
+				conditionsOK = false;
+				company = null;
+			} catch (NotFoundException e) {
+				System.err.println("Company not found");
+				conditionsOK = false;
 				company = null;
 			}
-
 			computer = new Computer.Builder().setName(name).setIntroduced(introduced).setDiscontinued(discontinued)
 					.setCompany(company).build();
-			System.out.println(computer.getCompany());
-			conditionsOK = allowCreation(computer);
+			if (!conditionsOK) {
+				conditionsOK = allowCreation(computer);
+			}
 		}
 		return computer;
 	}
@@ -215,13 +211,11 @@ public class UserInterface {
 	/**
 	 * Method that show the pages related to the computers
 	 */
-
 	public void pagesComputers() {
 		Pagination page = new Pagination();
 		int total = ComputerJersey.countComputer();
 		int nbPages = page.getTotalPages(total);
 		boolean quitPage = false;
-
 		while (!quitPage) {
 			List<Computer> computers = ComputerJersey.getListPage(page);
 			System.out.println(computers);
@@ -232,14 +226,11 @@ public class UserInterface {
 	/**
 	 * Method that show the pages related to the companies
 	 */
-
 	public void pagesCompanies() {
 		Pagination page = new Pagination();
-
 		int total = CompanyJersey.countCompany();
 		int nbPages = page.getTotalPages(total);
 		boolean quitPage = false;
-
 		while (!quitPage) {
 			List<Company> companies = CompanyJersey.getListPage(page);
 			System.out.println(companies);
@@ -255,14 +246,10 @@ public class UserInterface {
 	 */
 	public boolean menuPage(Pagination page, int nbPages) {
 		boolean quitPage = false;
-
 		System.out.println("Page " + page.getCurrentPage() + "/" + nbPages);
 		System.out.println("n : Next page   -   p : Previous page  -  s : Select page   -   q : Quit");
-
 		try {
-			Scanner sc = new Scanner(System.in);
 			String choice = sc.nextLine();
-
 			switch (choice) {
 			case "n":
 				if (page.getCurrentPage() == nbPages) {
@@ -271,7 +258,6 @@ public class UserInterface {
 					page.nextPage();
 				}
 				break;
-
 			case "p":
 				if (page.getCurrentPage() == 1) {
 					System.out.println("\n No previous page ! \n");
@@ -279,7 +265,6 @@ public class UserInterface {
 					page.previousPage();
 				}
 				break;
-
 			case "s":
 				System.out.println("Number of the page : ");
 				String nb = sc.nextLine();
@@ -296,7 +281,6 @@ public class UserInterface {
 					System.err.println("Enter a number");
 				}
 				break;
-
 			case "q":
 				quitPage = true;
 				break;
@@ -319,7 +303,7 @@ public class UserInterface {
 			System.err.println("Introduced date must be before discontinued date");
 			creationAuthorized = false;
 		}
-		if (computer.getCompany().getId() != 0) {
+		if (computer.getCompany() != null && computer.getCompany().getId() != 0) {
 			if (!CompanyJersey.existCompany(computer.getCompany().getId())) {
 				System.err.println("The company should exist");
 				creationAuthorized = false;
@@ -327,5 +311,4 @@ public class UserInterface {
 		}
 		return creationAuthorized;
 	}
-
 }

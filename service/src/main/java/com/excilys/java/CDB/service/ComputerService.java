@@ -31,10 +31,12 @@ public class ComputerService {
 		return computerDao.save(computer);
 	}
 
-	public void delete(long id) {
+	public boolean delete(long id) {
 		if(computerDao.existsById(id)){
 			computerDao.deleteById(id);
+			return true;
 		}
+		return false;
 	}
 
 	public Computer edit(Computer computer) {
