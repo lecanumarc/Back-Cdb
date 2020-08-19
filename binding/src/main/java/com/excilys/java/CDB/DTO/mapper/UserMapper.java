@@ -48,7 +48,7 @@ public class UserMapper {
 			if(user.getPassword() != null) {
 				userDTO.setPassword(user.getPassword());
 			}
-			if(userDTO.getRole() != null) {
+			if(user.getRole() != null) {
 				userDTO.setRole(RoleMapper.mapRoleToDto(user.getRole()));
 			}
 		} catch (Exception e) {

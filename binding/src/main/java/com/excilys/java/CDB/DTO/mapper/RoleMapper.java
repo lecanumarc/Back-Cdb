@@ -57,7 +57,7 @@ public class RoleMapper {
 		} catch (Exception e) {
 			logger.error("Error when mapping a Role to a RoleDTO", e);
 		}
-		
+
 		return roleDto;
 		
 	}

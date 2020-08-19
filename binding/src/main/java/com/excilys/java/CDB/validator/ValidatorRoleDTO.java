@@ -9,17 +9,11 @@ public class ValidatorRoleDTO {
 			throw new RoleException("roleDTO name can't be empty");
 		}
 	}
-	public static void validatorId(String id) throws RoleException {
-		if (id == null || id.equals("0")) {
-			throw new RoleException("id can't be null");
-		}
-	}
 
 	public static void validate(RoleDTO roleDTO) throws RoleException {
 		if(roleDTO == null) {
 			throw new RoleException("roleDTO can't be null");
 		}
 		validatorName(roleDTO.getName());
-		validatorId(roleDTO.getId());
 	}
 }

@@ -10,18 +10,12 @@ public class ValidatorUserDTO {
 		    throw new UserException("userDTO name can't be empty");
 		}
 	}
-	public static void validatorId(String id) throws UserException {
-		if (id == null || id == "0") {
-		    throw new UserException("id can't be null");
-		}
-	}
 
 	public static void validate(UserDTO userDto) throws UserException {
 		if(userDto == null) {
 			throw new UserException("userDto can't be null");
 		}
 		validatorName(userDto.getUsername());
-		validatorId(userDto.getUserId());
 		if(userDto.getRole() != null) {
 			try {
 				ValidatorRoleDTO.validate(userDto.getRole());

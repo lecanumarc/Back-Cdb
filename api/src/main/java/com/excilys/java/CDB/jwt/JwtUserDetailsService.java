@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.excilys.java.CDB.model.User;
 import com.excilys.java.CDB.service.UserService;
 
 @Service
@@ -23,5 +25,10 @@ public class JwtUserDetailsService implements UserDetailsService {
 		}
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
 				new ArrayList<>());
+	}
+
+	public User loadUserByToken(String token) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

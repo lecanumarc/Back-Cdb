@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.excilys.java.CDB.DTO.UserDTO;
 import com.excilys.java.CDB.DTO.DashboardDTO;
+import com.excilys.java.CDB.DTO.UserDTO;
 import com.excilys.java.CDB.DTO.mapper.UserMapper;
 import com.excilys.java.CDB.exception.UserException;
 import com.excilys.java.CDB.model.User;
@@ -34,15 +36,18 @@ import com.excilys.java.CDB.validator.ValidatorUserDTO;
 public class UserRestController {
 	private DashboardDTO page = new DashboardDTO();
 	private UserService userService;
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-	public UserRestController(UserService userService) {
+	public UserRestController(UserService userService, PasswordEncoder passwordEncoder) {
 		this.userService = userService;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@GetMapping({ "", "/" })
 	public ResponseEntity<List<UserDTO>> allUsers() {
 		List<User> users = userService.listUsers();
+		System.out.println(users);
 
 		List<UserDTO> usersDto = users.stream().map(user -> UserMapper.mapUserToDto(user))
 				.collect(Collectors.toList());
@@ -73,7 +78,7 @@ public class UserRestController {
 		}
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.NOT_FOUND);
 	}
-
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<UserDTO> deleteById(@PathVariable Long id) {
 		if(userService.delete(id)) {
@@ -86,6 +91,7 @@ public class UserRestController {
 	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
 		try {
 			ValidatorUserDTO.validate(userDTO);
+			userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 			User user = UserMapper.mapDtoToUser(userDTO);
 			ValidatorUser.validate(user);
 			userService.add(user);

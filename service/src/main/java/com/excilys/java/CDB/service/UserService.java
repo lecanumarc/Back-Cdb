@@ -52,6 +52,10 @@ public class UserService implements UserDetailsService {
 	public Optional<User> findById(long id) {
 		return userDAO.findById(id);
 	}
+	
+	public User findByUsername(String username) {
+		return userDAO.findByUsername(username);
+	}
 
 	public void add(User user) {
 		userDAO.save(user);
