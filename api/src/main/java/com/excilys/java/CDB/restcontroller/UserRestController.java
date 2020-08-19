@@ -91,7 +91,7 @@ public class UserRestController {
 		try {
 			ValidatorUserDTO.validate(userDTO);
 			if(userDTO.getRole().getName().contentEquals("admin")) {
-				throw new UserException("Cannot create new user has admin !");
+				throw new UserException("Cannot create new user as admin !");
 			}
 			userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 			User user = UserMapper.mapDtoToUser(userDTO);

@@ -25,11 +25,14 @@ public class CompanyMapper {
 		try {
 			if(companyDTO == null) {
 				throw new CompanyException("companyDTO can't be null");
-			} else if(companyDTO.getCompanyId() == null || companyDTO.getCompanyName() == null) {
-				throw new CompanyException("companyDTO object is invalid");
+			} else if(companyDTO.getCompanyName() == null) {
+				throw new CompanyException("companyDTO name can't be empty");
 			} else {
-				company = new Company.Builder().setId(Long.valueOf(companyDTO.getCompanyId()))
-						.setName(companyDTO.getCompanyName())
+				Company.Builder builder = new Company.Builder();
+				if(companyDTO.getCompanyId() != null) {
+					builder.setId(Long.valueOf(companyDTO.getCompanyId()));
+				}
+				company = builder.setName(companyDTO.getCompanyName())
 						.build();
 			}
 		} catch (CompanyException e) {
@@ -48,13 +51,15 @@ public class CompanyMapper {
 		try {
 			if(company == null) {
 				throw new CompanyException("Company can't be null");
-			} else if(company.getId() == null || company.getName() == null) {
-				throw new CompanyException("Company object is invalid");
+			} else if(company.getName() == null) {
+				throw new CompanyException("Company name can't be empty");
 			} else {
-				companyDTO = new CompanyDTO.Builder()
-						.setCompanyId(company.getId().toString())
-						.setCompanyName(company.getName())
-						.build();
+				CompanyDTO.Builder builder = new CompanyDTO.Builder();
+				if(company.getId() != null) {
+					builder.setCompanyId(company.getId().toString());
+				}
+				companyDTO = builder.setCompanyName(company.getName())
+				.build();
 			}
 		} catch (CompanyException e) {
 			logger.error(e.getMessage() +e.getStackTrace());
