@@ -7,7 +7,7 @@ import com.excilys.java.CDB.exception.UserException;
 public class ValidatorUserDTO {
 	public static void validatorName(String name) throws UserException {
 		if (name == null || name.trim().isEmpty()) {
-		    throw new UserException("userDTO name can't be empty");
+			throw new UserException("userDTO name can't be empty");
 		}
 	}
 
@@ -16,12 +16,13 @@ public class ValidatorUserDTO {
 			throw new UserException("userDto can't be null");
 		}
 		validatorName(userDto.getUsername());
-		if(userDto.getRole() != null) {
-			try {
-				ValidatorRoleDTO.validate(userDto.getRole());
-			} catch (RoleException e) {
-				throw new UserException("Error in userDTO's role");
-			}
+		if(userDto.getRole() == null) {
+			throw new UserException("userDto's role can't be null");
+		}
+		try {
+			ValidatorRoleDTO.validate(userDto.getRole());
+		} catch (RoleException e) {
+			throw new UserException("Error in userDTO's role");
 		}
 	}
 }

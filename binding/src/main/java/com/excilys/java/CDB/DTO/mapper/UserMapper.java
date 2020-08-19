@@ -25,9 +25,7 @@ public class UserMapper {
 			}
 			builder.setUsername(userDTO.getUsername());
 			builder.setPassword(userDTO.getPassword());
-			if(userDTO.getRole() != null) {
-				builder.setRole(RoleMapper.mapDtoToRole(userDTO.getRole()));
-			}
+			builder.setRole(RoleMapper.mapDtoToRole(userDTO.getRole()));
 			user = builder.build();
 		} catch (Exception e) {
 			logger.error("Error when mapping a UserDTO to a User", e);
@@ -35,7 +33,7 @@ public class UserMapper {
 		return user;
 	}
 
-	
+
 	public static UserDTO mapUserToDto(User user) {
 		UserDTO userDTO = new UserDTO();
 		try {
@@ -48,14 +46,12 @@ public class UserMapper {
 			if(user.getPassword() != null) {
 				userDTO.setPassword(user.getPassword());
 			}
-			if(user.getRole() != null) {
-				userDTO.setRole(RoleMapper.mapRoleToDto(user.getRole()));
-			}
+			userDTO.setRole(RoleMapper.mapRoleToDto(user.getRole()));
 		} catch (Exception e) {
 			logger.error("Error when mapping a User to a UserDTO", e);
 		}
-		
+
 		return userDTO;
-		
+
 	}
 }
