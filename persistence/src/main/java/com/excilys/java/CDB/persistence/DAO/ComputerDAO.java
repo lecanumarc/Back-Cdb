@@ -19,9 +19,7 @@ import com.excilys.java.CDB.model.Computer;
 public interface ComputerDAO extends JpaRepository<Computer, Long> {
 	
 	Page<Computer> findByNameContaining(String string, Pageable page);
-	
-	@Query(value = "SELECT u FROM Computer u where u.name like %?1% or u.company.name like %?1%")
-	Page<Computer> filteredPage( String filter,  Pageable page);
+	Page<Computer> findByNameContainingOrCompanyNameContaining(String computerFilter, String companyFilter,  Pageable page);
 	List<Computer> findAllByCompanyId(long id);
 	int countByNameContaining(String search);
 }

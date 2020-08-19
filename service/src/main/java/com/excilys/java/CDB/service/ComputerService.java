@@ -60,7 +60,7 @@ public class ComputerService {
 	}
 
 	public Page<Computer> listByPage(String filter, PageRequest pageReq) {
-		return computerDao.filteredPage(filter, pageReq);
+		return computerDao.findByNameContainingOrCompanyNameContaining(filter, filter, pageReq);
 	}
 
 	public Sort sortBy(String column, boolean ascOrder) {
