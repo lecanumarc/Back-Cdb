@@ -90,6 +90,9 @@ public class UserRestController {
 	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
 		try {
 			ValidatorUserDTO.validate(userDTO);
+			if(userDTO.getRole().getName().contentEquals("admin")) {
+				throw new UserException("Cannot create new user has admin !");
+			}
 			userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 			User user = UserMapper.mapDtoToUser(userDTO);
 			ValidatorUser.validate(user);
