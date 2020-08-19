@@ -22,4 +22,5 @@ public interface ComputerDAO extends JpaRepository<Computer, Long> {
 	Page<Computer> findByNameContainingOrCompanyNameContaining(String computerFilter, String companyFilter,  Pageable page);
 	List<Computer> findAllByCompanyId(long id);
 	int countByNameContaining(String search);
+	int countByNameContainingOrCompanyNameContaining(String computerFilter, String companyFilter);
 }

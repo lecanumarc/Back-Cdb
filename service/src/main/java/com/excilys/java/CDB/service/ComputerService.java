@@ -78,7 +78,7 @@ public class ComputerService {
 		if(search==null) {
 			return (int) computerDao.count();
 		}else {
-			return computerDao.countByNameContaining(search);
+			return computerDao.countByNameContainingOrCompanyNameContaining(search, search);
 		}
 	}
 }
