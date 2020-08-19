@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.excilys.java.CDB.exception.RoleException;
 import com.excilys.java.CDB.model.Role;
 import com.excilys.java.CDB.model.User;
 import com.excilys.java.CDB.persistence.DAO.RoleDAO;
@@ -27,7 +28,10 @@ public class RoleService {
 		this.userDAO = userDAO;
 	}
 
-	public Role add(Role role) {
+	public Role add(Role role) throws RoleException {
+		if(findByName(role.getName()) != null) {
+			throw new RoleException("Role name already taken !");
+		}
 		return roleDAO.save(role);
 	}
 
@@ -48,6 +52,10 @@ public class RoleService {
 
 	public Optional<Role> findById(long id) {
 		return roleDAO.findById(id);
+	}
+
+	public Role findByName(String name) {
+		return roleDAO.findByName(name);
 	}
 
 	public int getNumberRows() {

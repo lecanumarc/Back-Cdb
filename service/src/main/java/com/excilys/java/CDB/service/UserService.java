@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.excilys.java.CDB.model.Computer;
+import com.excilys.java.CDB.exception.UserException;
 import com.excilys.java.CDB.model.User;
 import com.excilys.java.CDB.persistence.DAO.UserDAO;
 
@@ -52,12 +52,15 @@ public class UserService implements UserDetailsService {
 	public Optional<User> findById(long id) {
 		return userDAO.findById(id);
 	}
-	
+
 	public User findByUsername(String username) {
 		return userDAO.findByUsername(username);
 	}
 
-	public void add(User user) {
+	public void add(User user) throws UserException{
+		if(findByUsername(user.getUsername()) != null) {
+			throw new UserException("username already taken !");
+		}
 		userDAO.save(user);
 	}
 

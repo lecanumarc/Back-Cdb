@@ -9,7 +9,7 @@ import com.excilys.java.CDB.model.Role;
 
 @Repository
 public interface RoleDAO extends JpaRepository<Role, Long> {
-	Role findByName(Role name);
+	Role findByName(String name);
 	Page<Role> findByNameContaining(String filter, PageRequest pageReq);
 	int countByNameContaining(String search);
 }

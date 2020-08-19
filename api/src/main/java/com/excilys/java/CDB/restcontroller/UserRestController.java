@@ -47,7 +47,6 @@ public class UserRestController {
 	@GetMapping({ "", "/" })
 	public ResponseEntity<List<UserDTO>> allUsers() {
 		List<User> users = userService.listUsers();
-		System.out.println(users);
 
 		List<UserDTO> usersDto = users.stream().map(user -> UserMapper.mapUserToDto(user))
 				.collect(Collectors.toList());
