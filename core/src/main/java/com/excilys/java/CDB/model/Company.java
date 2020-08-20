@@ -26,17 +26,9 @@ public class Company {
 	public Long getId() {
 		return id;
 	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 	
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	@Override
@@ -46,7 +38,6 @@ public class Company {
 		sb.append(", name :").append(this.name).append("\n");
 		return sb.toString();
 	}
-	
 
 	@Override
 	public int hashCode() {

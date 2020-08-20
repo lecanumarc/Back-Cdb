@@ -29,16 +29,6 @@ public class CompanyMapperTest {
 	}
 
 	@Test()
-	public void mapDtoToCompanyWithNullId() {
-		CompanyDTO companyDTO =  new CompanyDTO.Builder()
-				.setCompanyId(null)
-				.setCompanyName("Apple")
-				.build();	
-		Company company = CompanyMapper.mapDtoToCompany(companyDTO);
-		assertEquals("company should be null", null, company);
-	}
-
-	@Test()
 	public void validMapCompanyToDto() {
 		Company company = new Company.Builder()
 				.setId(new Long(1))
@@ -53,17 +43,6 @@ public class CompanyMapperTest {
 	@Test()
 	public void mapCompanyToDtoWithNullCompany() {
 		Company company = null;
-		CompanyDTO companyDTO = CompanyMapper.mapCompanyToDTO(company);
-
-		assertEquals("companyDTO should be null", null, companyDTO);
-	}
-
-	@Test()
-	public void mapCompanyToDtoWithNullId() {
-		Company company = new Company.Builder()
-				.setId(null)
-				.setName("Apple")
-				.build();
 		CompanyDTO companyDTO = CompanyMapper.mapCompanyToDTO(company);
 
 		assertEquals("companyDTO should be null", null, companyDTO);

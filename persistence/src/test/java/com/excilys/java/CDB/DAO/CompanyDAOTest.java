@@ -139,27 +139,27 @@ public class CompanyDAOTest {
 		assertEquals("Wrong last company value", lastCompany, list.get(19));
 	}
 	
-//	@Test
-//	public void validFilteredOrderedPage() {
-//		int index = 0;
-//		int rows = 5;
-//		String filter = "Apple";
-//		String column = "id";
-//		
-//		PageRequest pageReq = PageRequest.of(index, rows , Sort.by(column).ascending());
-//		
-//		Page<Company> page = companyDAO.findByNameContaining(filter, pageReq);
-//
-//		
-//		List<Company> list = page.getContent();
-//		Company firstCompany = new Company.Builder()
-//				.setName("Apple Inc.")
-//				.setId(new Long(1))
-//				.build();
-//		
-//		assertTrue("page has empty content", page.hasContent());
-//		assertEquals("Wrong list size", 1, page.getSize());
-//		assertEquals("Wrong first company value", firstCompany, list.get(0));
-//	}
+	@Test
+	public void validFilteredByName() {
+		int index = 0;
+		int rows = 5;
+		String filter = "Apple";
+		String column = "id";
+		
+		PageRequest pageReq = PageRequest.of(index, rows , Sort.by(column).ascending());
+		
+		Page<Company> page = companyDAO.findByNameContaining(filter, pageReq);
+
+		
+		List<Company> list = page.getContent();
+		Company firstCompany = new Company.Builder()
+				.setName("Apple Inc.")
+				.setId(new Long(1))
+				.build();
+		
+		assertTrue("page has empty content", page.hasContent());
+		assertEquals("Wrong list size", 1, page.getSize());
+		assertEquals("Wrong first company value", firstCompany, list.get(0));
+	}
 
 }

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -79,8 +78,8 @@ public class UserService implements UserDetailsService {
 	public int count(String search) {
 		if(search==null) {
 			return (int) userDAO.count();
-		}else {
-			return userDAO.countByUsernameContaining(search);
+		} else {
+			return userDAO.countByUsernameContainingOrRoleNameContaining(search, search);
 		}
 	}
 
@@ -89,7 +88,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public Page<User> listByPage(String filter, PageRequest pageReq) {
-		return userDAO.findByUsernameContaining(filter, pageReq);
+		return userDAO.findByUsernameContainingOrRoleNameContaining(filter, filter, pageReq);
 	}
 
 	public Sort sortBy(String column, boolean ascOrder) {

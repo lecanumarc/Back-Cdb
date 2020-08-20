@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -105,7 +106,7 @@ public class ComputerDAOTest {
 		int rows = 5;
 		Page<Computer> page = computerDAO.findAll(PageRequest.of(index, rows));
 		List<Computer> list = page.getContent();
-		
+
 		Company company = new Company.Builder()
 				.setId( new Long(1))
 				.setName("Apple Inc.")
@@ -114,13 +115,13 @@ public class ComputerDAOTest {
 				.setId( new Long(2))
 				.setName("Thinking Machines")
 				.build();
-		
+
 		Computer firstComputer = new Computer.Builder()
 				.setId(new Long(1))
 				.setName("MacBook Pro 15.4 inch")
 				.setCompany(company)
 				.build();
-		
+
 		Computer lastComputer = new Computer.Builder()
 				.setName("CM-5")
 				.setId(new Long(5))
@@ -150,7 +151,7 @@ public class ComputerDAOTest {
 				.setName("MacBook Pro 15.4 inch")
 				.setCompany(company)
 				.build();
-		
+
 		Computer lastComputer = new Computer.Builder()
 				.setName("ELF II")
 				.setId(new Long(20))
@@ -163,4 +164,39 @@ public class ComputerDAOTest {
 		assertEquals("Wrong last computer value", lastComputer, list.get(19));
 	}
 
+	@Test
+	public void validFilterByNameAndCompanyName() {
+		int index = 0;
+		int rows = 5;
+		String filter = "CM-";
+		String column = "id";
+
+		PageRequest pageReq = PageRequest.of(index, rows , Sort.by(column).ascending());
+
+		Page<Computer> page = computerDAO.findByNameContainingOrCompanyNameContaining(filter, filter, pageReq);
+
+		Company company = new Company.Builder()
+				.setName("Thinking Machines")
+				.setId(new Long(2))
+				.build();
+		
+		List<Computer> list = page.getContent();
+		
+		Computer firstComputer = new Computer.Builder()
+				.setName("CM-2a")
+				.setId(new Long(2))
+				.setCompany(company)
+				.build();
+		
+		Computer lastComputer = new Computer.Builder()
+				.setName("CM-2")
+				.setId(new Long(14))
+				.setCompany(company)
+				.build();
+		
+		assertTrue("page has empty content", page.hasContent());
+		assertEquals("Wrong list size", rows, page.getSize());
+		assertEquals("Wrong first computer value", firstComputer, list.get(0));
+		assertEquals("Wrong last computer value", lastComputer, list.get(rows-1));
+	}
 }
