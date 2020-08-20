@@ -61,6 +61,7 @@ public class SpringConfigRestController extends WebSecurityConfigurerAdapter {
 		httpSecurity.csrf().disable()
 		.authorizeRequests()
 		.antMatchers("/authenticate").permitAll()
+		.antMatchers("/authenticate/*").permitAll()
 
 		//roles
 		.antMatchers(HttpMethod.GET, "/roles").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
