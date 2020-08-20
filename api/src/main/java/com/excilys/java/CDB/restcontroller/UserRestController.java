@@ -103,6 +103,20 @@ public class UserRestController {
 		return new ResponseEntity<UserDTO>(HttpStatus.CREATED);
 	}
 
+	@PutMapping(value="/self" , consumes = "application/json")
+	public ResponseEntity<UserDTO> updateSelf(@RequestBody UserDTO userDTO) {
+		try {
+			ValidatorUserDTO.validate(userDTO);
+			User user = UserMapper.mapDtoToUser(userDTO);
+			ValidatorUser.validate(user);
+			userService.edit(user);
+		} catch (UserException e) {
+			e.printStackTrace();
+			return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<UserDTO>(HttpStatus.CREATED);
+	}
+	
 	@PutMapping(consumes = "application/json")
 	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
 		try {
