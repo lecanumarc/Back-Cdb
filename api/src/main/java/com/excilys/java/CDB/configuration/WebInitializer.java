@@ -14,7 +14,7 @@ public class WebInitializer implements WebApplicationInitializer {
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
 		webApplicationContext.register(SpringConfigRestController.class, SpringConfigService.class,
-				SpringConfigPersistence.class, SpringFoxConfig.class, WebConfig.class);
+				SpringConfigPersistence.class, SpringFoxConfig.class);
 		webApplicationContext.setServletContext(servletContext);
 		ServletRegistration.Dynamic servlet = servletContext.addServlet("dispatcher",
 				new DispatcherServlet(webApplicationContext));

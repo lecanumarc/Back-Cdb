@@ -108,18 +108,22 @@ public class UserRestController {
 	public ResponseEntity<UserDTO> updateSelf(@RequestBody UserDTO userDTO) {
 		try {
 			ValidatorUserDTO.validate(userDTO);
-			Optional<User> foundUser = userService.findById(new Long(userDTO.getUserId()));
-			if(foundUser.isPresent()) {
-				if(userDTO.getPassword() == null) {
-					userDTO.setPassword(foundUser.get().getPassword());
-				}
-				userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-				if(!foundUser.get().getRole().getName().equals("admin") &&
-						userDTO.getRole() != RoleMapper.mapRoleToDto(foundUser.get().getRole())) {
-					return new ResponseEntity<UserDTO>(HttpStatus.UNAUTHORIZED);
+			if(userDTO.getUserId() != null) {
+				Optional<User> foundUser = userService.findById(new Long(userDTO.getUserId()));
+				if(foundUser.isPresent()) {
+					if(userDTO.getPassword() == null) {
+						userDTO.setPassword(foundUser.get().getPassword());
+					}
+					userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+					if(!foundUser.get().getRole().getName().equals("admin") &&
+							userDTO.getRole() != RoleMapper.mapRoleToDto(foundUser.get().getRole())) {
+						return new ResponseEntity<UserDTO>(HttpStatus.UNAUTHORIZED);
+					}
+				} else {
+					return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
 				}
 			} else {
-				return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+				throw new UserException("UserDTO id is null !");
 			}
 			User user = UserMapper.mapDtoToUser(userDTO);
 			ValidatorUser.validate(user);

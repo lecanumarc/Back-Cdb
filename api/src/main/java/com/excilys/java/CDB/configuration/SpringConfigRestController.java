@@ -58,50 +58,39 @@ public class SpringConfigRestController extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable()
-		.authorizeRequests()
-		.antMatchers("/authenticate").permitAll()
-		.antMatchers("/authenticate/*").permitAll()
+		httpSecurity.authorizeRequests()
+		.antMatchers("/authenticate/**").permitAll()
 
 		//roles
-		.antMatchers(HttpMethod.GET, "/roles").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.POST,"/roles/page").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.GET, "/roles/{\\d+}").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.DELETE, "/roles/{\\d+}").hasAuthority("ROLE_ADMIN")
-		.antMatchers(HttpMethod.POST, "/roles").hasAuthority("ROLE_ADMIN")
-		.antMatchers(HttpMethod.PUT, "/roles").hasAuthority("ROLE_ADMIN")
-		.antMatchers("/roles/number").permitAll()
-		
-		//users
-		.antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.POST,"/users/page").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.GET, "/users/{\\d+}").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.DELETE, "/users/{\\d+}").hasAuthority("ROLE_ADMIN")
-		.antMatchers(HttpMethod.POST, "/users").hasAuthority("ROLE_ADMIN")
-		.antMatchers(HttpMethod.PUT, "/users/self").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.PUT, "/users").hasAuthority("ROLE_ADMIN")
-		.antMatchers("/users/number").permitAll()
-		
-		//companies
-		.antMatchers(HttpMethod.GET, "/companies").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.POST,"/companies/page").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.GET, "/companies/{\\d+}").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.DELETE, "/companies/{\\d+}").hasAuthority("ROLE_ADMIN")
-		.antMatchers(HttpMethod.POST, "/companies").hasAuthority("ROLE_ADMIN")
-		.antMatchers(HttpMethod.PUT, "/companies").hasAuthority("ROLE_ADMIN")
-		.antMatchers("/companies/number").permitAll()
-		
-		//computers
-		.antMatchers(HttpMethod.GET, "/computers").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.POST,"/computers/page").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.GET, "/computers/{\\d+}").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-		.antMatchers(HttpMethod.DELETE, "/computers/{\\d+}").hasAuthority("ROLE_ADMIN")
-		.antMatchers(HttpMethod.POST, "/computers").hasAuthority("ROLE_ADMIN")
-		.antMatchers(HttpMethod.PUT, "/computers").hasAuthority("ROLE_ADMIN")
-		.antMatchers("/computers/number").permitAll()
-		
-		.anyRequest().authenticated().and().
+		.antMatchers(HttpMethod.DELETE, "/roles/**").hasAuthority("ROLE_admin")
+		.antMatchers(HttpMethod.POST,"/roles/page/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+		.antMatchers(HttpMethod.POST, "/roles/**").hasAuthority("ROLE_admin")
+		.antMatchers(HttpMethod.PUT, "/roles/**").hasAuthority("ROLE_admin")
+		.antMatchers(HttpMethod.GET, "/roles/**").hasAnyAuthority("ROLE_user","ROLE_admin")
 
+		//users
+		.antMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("ROLE_admin")
+		.antMatchers(HttpMethod.POST,"/users/page/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+		.antMatchers(HttpMethod.POST, "/users/**").hasAuthority("ROLE_admin")
+//		.antMatchers(HttpMethod.PUT, "/users/self/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+		.antMatchers(HttpMethod.PUT, "/users/").hasAuthority("ROLE_admin")
+		.antMatchers(HttpMethod.GET, "/users/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+
+		//companies
+		.antMatchers(HttpMethod.DELETE, "/companies/**").hasAuthority("ROLE_admin")
+		.antMatchers(HttpMethod.POST,"/companies/page/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+		.antMatchers(HttpMethod.POST, "/companies/**").hasAuthority("ROLE_admin")
+		.antMatchers(HttpMethod.PUT, "/companies/**").hasAuthority("ROLE_admin")
+		.antMatchers(HttpMethod.GET, "/companies/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+
+		//computers
+		.antMatchers(HttpMethod.DELETE, "/computers/**").hasAuthority("ROLE_admin")
+		.antMatchers(HttpMethod.POST,"/computers/page/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+		.antMatchers(HttpMethod.POST, "/computers/**").hasAuthority("ROLE_admin")
+		.antMatchers(HttpMethod.PUT, "/computers/**").hasAuthority("ROLE_admin")
+		.antMatchers(HttpMethod.GET, "/computers/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+
+		.and().csrf().disable().
 		exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
