@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.excilys.java.CDB.DTO.DashboardDTO;
 import com.excilys.java.CDB.DTO.UserDTO;
+import com.excilys.java.CDB.DTO.mapper.RoleMapper;
 import com.excilys.java.CDB.DTO.mapper.UserMapper;
 import com.excilys.java.CDB.exception.UserException;
 import com.excilys.java.CDB.model.User;
@@ -107,6 +108,18 @@ public class UserRestController {
 	public ResponseEntity<UserDTO> updateSelf(@RequestBody UserDTO userDTO) {
 		try {
 			ValidatorUserDTO.validate(userDTO);
+			Optional<User> foundUser = userService.findById(new Long(userDTO.getUserId()));
+			if(foundUser.isPresent()) {
+				if(userDTO.getPassword() == null) {
+					userDTO.setPassword(foundUser.get().getPassword());
+				}
+				if(!foundUser.get().getRole().getName().equals("admin") &&
+						userDTO.getRole() != RoleMapper.mapRoleToDto(foundUser.get().getRole())) {
+					return new ResponseEntity<UserDTO>(HttpStatus.UNAUTHORIZED);
+				}
+			} else {
+				return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+			}
 			User user = UserMapper.mapDtoToUser(userDTO);
 			ValidatorUser.validate(user);
 			userService.edit(user);
@@ -121,6 +134,14 @@ public class UserRestController {
 	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
 		try {
 			ValidatorUserDTO.validate(userDTO);
+			Optional<User> foundUser = userService.findById(new Long(userDTO.getUserId()));
+			if(foundUser.isPresent()) {
+				if(userDTO.getPassword() == null) {
+					userDTO.setPassword(foundUser.get().getPassword());
+				}
+			} else {
+				return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+			}
 			User user = UserMapper.mapDtoToUser(userDTO);
 			ValidatorUser.validate(user);
 			userService.edit(user);
