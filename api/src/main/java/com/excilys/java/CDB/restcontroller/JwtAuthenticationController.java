@@ -42,14 +42,21 @@ public class JwtAuthenticationController {
 	UserService userService;
 
 	@PostMapping(consumes = "application/json")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+	public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
+		try{
+			authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+		} catch(DisabledException e) {
+			return new ResponseEntity<JwtResponse>(HttpStatus.NOT_FOUND);
+		}
+		catch(BadCredentialsException e) {
+			return new ResponseEntity<JwtResponse>(HttpStatus.UNAUTHORIZED);
+		}
 		final UserDetails userDetails = userDetailsService
 				.loadUserByUsername(authenticationRequest.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
-		return ResponseEntity.ok(new JwtResponse(token));
+		return new ResponseEntity<JwtResponse>(new JwtResponse(token) , HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/user", consumes = "application/json")
 	public ResponseEntity<UserDTO> getUsernameFromToken(@RequestBody Map<String, Object> payload) {
 		UserDTO userDTO = new UserDTO();
@@ -66,14 +73,14 @@ public class JwtAuthenticationController {
 		}
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
-	
-	private void authenticate(String username, String password) throws Exception {
+
+	private void authenticate(String username, String password) {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		} catch (DisabledException e) {
-			throw new Exception("USER_DISABLED", e);
+			throw new DisabledException("USER_DISABLED", e);
 		} catch (BadCredentialsException e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
+			throw new BadCredentialsException("INVALID_CREDENTIALS", e);
 		}
 	}
 }
