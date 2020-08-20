@@ -50,7 +50,7 @@ public class UserRestController {
 
 		List<UserDTO> usersDto = users.stream().map(user -> UserMapper.mapUserToDto(user))
 				.collect(Collectors.toList());
-		
+
 		return new ResponseEntity<List<UserDTO>>(usersDto, HttpStatus.OK);
 	}
 
@@ -77,7 +77,7 @@ public class UserRestController {
 		}
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.NOT_FOUND);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<UserDTO> deleteById(@PathVariable Long id) {
 		if(userService.delete(id)) {
@@ -113,6 +113,7 @@ public class UserRestController {
 				if(userDTO.getPassword() == null) {
 					userDTO.setPassword(foundUser.get().getPassword());
 				}
+				userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 				if(!foundUser.get().getRole().getName().equals("admin") &&
 						userDTO.getRole() != RoleMapper.mapRoleToDto(foundUser.get().getRole())) {
 					return new ResponseEntity<UserDTO>(HttpStatus.UNAUTHORIZED);
@@ -129,7 +130,7 @@ public class UserRestController {
 		}
 		return new ResponseEntity<UserDTO>(HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping(consumes = "application/json")
 	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
 		try {
@@ -139,6 +140,7 @@ public class UserRestController {
 				if(userDTO.getPassword() == null) {
 					userDTO.setPassword(foundUser.get().getPassword());
 				}
+				userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 			} else {
 				return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
 			}
@@ -151,7 +153,7 @@ public class UserRestController {
 		}
 		return new ResponseEntity<UserDTO>(HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping("/number")
 	public int numberUsers(@RequestBody DashboardDTO dashboardDTO) {
 		page.setPage(dashboardDTO);
