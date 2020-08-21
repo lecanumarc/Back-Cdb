@@ -111,9 +111,7 @@ public class UserRestController {
 			ValidatorUserDTO.validate(userDTO);
 			Optional<User> foundUser = userService.findById(new Long(userDTO.getUserId()));
 			if(foundUser.isPresent()) {
-				if(userDTO.getPassword() == null) {
-					userDTO.setPassword(foundUser.get().getPassword());
-				}
+				userDTO.setPassword(foundUser.get().getPassword());
 				userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 			} else {
 				return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
