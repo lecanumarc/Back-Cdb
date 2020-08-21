@@ -1,6 +1,7 @@
 package com.excilys.java.CDB.persistence.DAO;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,7 @@ import com.excilys.java.CDB.model.User;
 @Repository
 public interface UserDAO extends JpaRepository<User, Long> {
 	
-	User findByUsername(String username);
+	Optional<User> findByUsername(String username);
 
 	Page<User> findByUsernameContaining(String filter, Pageable pageReq);
 

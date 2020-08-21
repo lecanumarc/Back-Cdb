@@ -1,28 +1,30 @@
 package com.excilys.java.CDB.restcontroller;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.excilys.java.CDB.DTO.DashboardDTO;
 import com.excilys.java.CDB.DTO.UserDTO;
-import com.excilys.java.CDB.DTO.mapper.RoleMapper;
 import com.excilys.java.CDB.DTO.mapper.UserMapper;
 import com.excilys.java.CDB.exception.UserException;
 import com.excilys.java.CDB.jwt.JwtRequest;
@@ -48,7 +50,7 @@ public class JwtAuthenticationController {
 	UserService userService;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@PostMapping(consumes = "application/json")
 	public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
 		try{
@@ -70,18 +72,22 @@ public class JwtAuthenticationController {
 		UserDTO userDTO = new UserDTO();
 		String username = jwtTokenUtil.getUsernameFromToken(payload.get("token").toString());
 		try {
-			User user = userService.findByUsername(username);
-			ValidatorUser.validate(user);
-			userDTO = UserMapper.mapUserToDto(user);
-			ValidatorUserDTO.validate(userDTO);
-			userDTO.setPassword("");
+			Optional<User> user = userService.findByUsername(username);
+			if(user.isPresent()) {
+				ValidatorUser.validate(user.get());
+				userDTO = UserMapper.mapUserToDto(user.get());
+				ValidatorUserDTO.validate(userDTO);
+				userDTO.setPassword("");
+			} else {
+				return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+			}
 		} catch (UserException e) {
 			e.printStackTrace();
 			return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/add", consumes = "application/json")
 	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
 		try {
@@ -99,8 +105,8 @@ public class JwtAuthenticationController {
 		}
 		return new ResponseEntity<UserDTO>(HttpStatus.CREATED);
 	}
-	
-	@PutMapping(value="/profil" , consumes = "application/json")
+
+	@PutMapping(value="/profile" , consumes = "application/json")
 	public ResponseEntity<UserDTO> updateSelf(@RequestBody UserDTO userDTO) {
 		try {
 			ValidatorUserDTO.validate(userDTO);
@@ -129,6 +135,25 @@ public class JwtAuthenticationController {
 			return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<UserDTO>(HttpStatus.CREATED);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<UserDTO> deleteSelf(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
+		String token = headers.getFirst(HttpHeaders.AUTHORIZATION).substring(7);
+		String username = jwtTokenUtil.getUsernameFromToken(token);
+		Optional<User> foundUserByUsername = userService.findByUsername(username);
+		Optional<User> foundUserById = userService.findById(id);
+
+		if(foundUserByUsername.isPresent() && foundUserById.isPresent() &&
+				foundUserByUsername.get().getUsername().contentEquals(foundUserById.get().getUsername())) {
+			if(userService.delete(id)) {
+				return new ResponseEntity<UserDTO>(HttpStatus.NO_CONTENT);
+			}
+		}
+		else {
+			return new ResponseEntity<UserDTO>(HttpStatus.FORBIDDEN);
+		}
+		return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	private void authenticate(String username, String password) {

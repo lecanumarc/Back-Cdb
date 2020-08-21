@@ -28,15 +28,15 @@ public class UserService implements UserDetailsService {
 			throw new UsernameNotFoundException("Username is empty");
 		}
 
-		User user = userDAO.findByUsername(username);
+		Optional<User> user = userDAO.findByUsername(username);
 
-		if (user == null) {
+		if (!user.isPresent()) {
 			throw new UsernameNotFoundException("User " + username + " not found");
 		}
 		return org.springframework.security.core.userdetails.User.builder()
-				.username(user.getUsername())
-				.password(user.getPassword())
-				.roles(user.getRole().getName())
+				.username(user.get().getUsername())
+				.password(user.get().getPassword())
+				.roles(user.get().getRole().getName())
 				.build();
 	}
 
@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService {
 		return userDAO.findById(id);
 	}
 
-	public User findByUsername(String username) {
+	public Optional<User> findByUsername(String username) {
 		return userDAO.findByUsername(username);
 	}
 
