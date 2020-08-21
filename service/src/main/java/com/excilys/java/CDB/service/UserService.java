@@ -57,7 +57,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public void add(User user) throws UserException{
-		if(findByUsername(user.getUsername()) != null) {
+		if(findByUsername(user.getUsername()).isPresent()) {
 			throw new UserException("username already taken !");
 		}
 		userDAO.save(user);
