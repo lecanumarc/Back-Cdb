@@ -104,36 +104,6 @@ public class UserRestController {
 		return new ResponseEntity<UserDTO>(HttpStatus.CREATED);
 	}
 
-	@PutMapping(value="/self" , consumes = "application/json")
-	public ResponseEntity<UserDTO> updateSelf(@RequestBody UserDTO userDTO) {
-		try {
-			ValidatorUserDTO.validate(userDTO);
-			if(userDTO.getUserId() != null) {
-				Optional<User> foundUser = userService.findById(new Long(userDTO.getUserId()));
-				if(foundUser.isPresent()) {
-					if(userDTO.getPassword() == null) {
-						userDTO.setPassword(foundUser.get().getPassword());
-					}
-					userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-					if(!foundUser.get().getRole().getName().equals("admin") &&
-							userDTO.getRole() != RoleMapper.mapRoleToDto(foundUser.get().getRole())) {
-						return new ResponseEntity<UserDTO>(HttpStatus.UNAUTHORIZED);
-					}
-				} else {
-					return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
-				}
-			} else {
-				throw new UserException("UserDTO id is null !");
-			}
-			User user = UserMapper.mapDtoToUser(userDTO);
-			ValidatorUser.validate(user);
-			userService.edit(user);
-		} catch (UserException e) {
-			e.printStackTrace();
-			return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<UserDTO>(HttpStatus.CREATED);
-	}
 
 	@PutMapping(consumes = "application/json")
 	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {

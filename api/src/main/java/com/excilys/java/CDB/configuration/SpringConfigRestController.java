@@ -59,11 +59,13 @@ public class SpringConfigRestController extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.authorizeRequests()
+		.antMatchers(HttpMethod.PUT, "/authenticate/profil/**").hasAnyAuthority("ROLE_user","ROLE_admin")
 		.antMatchers("/authenticate/**").permitAll()
 
 		//roles
 		.antMatchers(HttpMethod.DELETE, "/roles/**").hasAuthority("ROLE_admin")
 		.antMatchers(HttpMethod.POST,"/roles/page/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+		.antMatchers(HttpMethod.POST,"/roles/number/**").hasAnyAuthority("ROLE_user","ROLE_admin")
 		.antMatchers(HttpMethod.POST, "/roles/**").hasAuthority("ROLE_admin")
 		.antMatchers(HttpMethod.PUT, "/roles/**").hasAuthority("ROLE_admin")
 		.antMatchers(HttpMethod.GET, "/roles/**").hasAnyAuthority("ROLE_user","ROLE_admin")
@@ -71,6 +73,7 @@ public class SpringConfigRestController extends WebSecurityConfigurerAdapter {
 		//users
 		.antMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("ROLE_admin")
 		.antMatchers(HttpMethod.POST,"/users/page/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+		.antMatchers(HttpMethod.POST,"/users/number/**").hasAnyAuthority("ROLE_user","ROLE_admin")
 		.antMatchers(HttpMethod.POST, "/users/**").hasAuthority("ROLE_admin")
 //		.antMatchers(HttpMethod.PUT, "/users/self/**").hasAnyAuthority("ROLE_user","ROLE_admin")
 		.antMatchers(HttpMethod.PUT, "/users/").hasAuthority("ROLE_admin")
@@ -79,6 +82,7 @@ public class SpringConfigRestController extends WebSecurityConfigurerAdapter {
 		//companies
 		.antMatchers(HttpMethod.DELETE, "/companies/**").hasAuthority("ROLE_admin")
 		.antMatchers(HttpMethod.POST,"/companies/page/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+		.antMatchers(HttpMethod.POST,"/companies/number/**").hasAnyAuthority("ROLE_user","ROLE_admin")
 		.antMatchers(HttpMethod.POST, "/companies/**").hasAuthority("ROLE_admin")
 		.antMatchers(HttpMethod.PUT, "/companies/**").hasAuthority("ROLE_admin")
 		.antMatchers(HttpMethod.GET, "/companies/**").hasAnyAuthority("ROLE_user","ROLE_admin")
@@ -86,6 +90,7 @@ public class SpringConfigRestController extends WebSecurityConfigurerAdapter {
 		//computers
 		.antMatchers(HttpMethod.DELETE, "/computers/**").hasAuthority("ROLE_admin")
 		.antMatchers(HttpMethod.POST,"/computers/page/**").hasAnyAuthority("ROLE_user","ROLE_admin")
+		.antMatchers(HttpMethod.POST,"/computers/number/**").hasAnyAuthority("ROLE_user","ROLE_admin")
 		.antMatchers(HttpMethod.POST, "/computers/**").hasAuthority("ROLE_admin")
 		.antMatchers(HttpMethod.PUT, "/computers/**").hasAuthority("ROLE_admin")
 		.antMatchers(HttpMethod.GET, "/computers/**").hasAnyAuthority("ROLE_user","ROLE_admin")
