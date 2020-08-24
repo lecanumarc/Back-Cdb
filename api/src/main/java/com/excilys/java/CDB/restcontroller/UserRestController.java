@@ -110,7 +110,9 @@ public class UserRestController {
 		try {
 			ValidatorUserDTO.validate(userDTO);
 			Optional<User> foundUser = userService.findById(new Long(userDTO.getUserId()));
-			if(foundUser.isPresent()) {
+			if(userDTO != null && userDTO.getPassword() != null) {
+				userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+			} else if(foundUser.isPresent()) {
 				userDTO.setPassword(foundUser.get().getPassword());
 				userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 			} else {
